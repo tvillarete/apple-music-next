@@ -48,7 +48,7 @@ type LinkOptionProps = {
 type SongOptionProps = {
   type: "song";
   /** Options that will be used to fetch and play a song. */
-  queueOptions: IpodApi.QueueOptions;
+  queueOptions: MediaApi.QueueOptions;
   /**
    * Show the Now Playing view after starting the song.
    * @default false

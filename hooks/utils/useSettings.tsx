@@ -10,9 +10,9 @@ import { DeviceThemeName } from "../../utils/themes";
 
 type StreamingService = "apple" | "spotify";
 
-export const SELECTED_SERVICE_KEY = "ipodSelectedService";
-export const DEVICE_COLOR_KEY = "ipodSelectedDeviceTheme";
-export const VOLUME_KEY = "ipodVolume";
+export const SELECTED_SERVICE_KEY = "appleMusicSelectedService";
+export const DEVICE_COLOR_KEY = "appleMusicSelectedDeviceTheme";
+export const VOLUME_KEY = "appleMusicVolume";
 
 export interface SettingsState {
   service?: StreamingService;

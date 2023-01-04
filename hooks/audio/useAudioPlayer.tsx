@@ -24,9 +24,9 @@ const defaultPlatbackInfoState = {
 
 interface AudioPlayerState {
   playbackInfo: typeof defaultPlatbackInfoState;
-  nowPlayingItem?: IpodApi.MediaItem;
+  nowPlayingItem?: MediaApi.MediaItem;
   volume: number;
-  play: (queueOptions: IpodApi.QueueOptions) => Promise<void>;
+  play: (queueOptions: MediaApi.QueueOptions) => Promise<void>;
   pause: () => Promise<void>;
   seekToTime: (time: number) => void;
   setVolume: (volume: number) => void;
@@ -56,11 +56,11 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   const { spotifyPlayer, accessToken, deviceId } = useSpotifySDK();
   const { music } = useMusicKit();
   const [volume, setVolume] = useState(0.5);
-  const [nowPlayingItem, setNowPlayingItem] = useState<IpodApi.MediaItem>();
+  const [nowPlayingItem, setNowPlayingItem] = useState<MediaApi.MediaItem>();
   const [playbackInfo, setPlaybackInfo] = useState(defaultPlatbackInfoState);
 
   const playAppleMusic = useCallback(
-    async (queueOptions: IpodApi.QueueOptions) => {
+    async (queueOptions: MediaApi.QueueOptions) => {
       if (!isAppleAuthorized) {
         throw new Error("Unable to play: Not authorized");
       }
@@ -94,7 +94,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   );
 
   const playSpotify = useCallback(
-    async (queueOptions: IpodApi.QueueOptions) => {
+    async (queueOptions: MediaApi.QueueOptions) => {
       if (!isSpotifyAuthorized) {
         throw new Error("Unable to play: Not authorized");
       }
@@ -136,7 +136,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   );
 
   const play = useCallback(
-    async (queueOptions: IpodApi.QueueOptions) => {
+    async (queueOptions: MediaApi.QueueOptions) => {
       switch (service) {
         case "apple":
           return playAppleMusic(queueOptions);
@@ -242,7 +242,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   }, [music, nowPlayingItem, service, spotifyPlayer]);
 
   const updateNowPlayingItem = useCallback(async () => {
-    let mediaItem: IpodApi.MediaItem | undefined;
+    let mediaItem: MediaApi.MediaItem | undefined;
 
     // TODO: Update types for MusicKit V3
     if (service === "apple" && (music as any).nowPlayingItem) {

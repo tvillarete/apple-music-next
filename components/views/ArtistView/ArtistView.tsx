@@ -15,7 +15,7 @@ interface Props {
 }
 
 const ArtistView = ({ id, inLibrary = false }: Props) => {
-  const { data: albums, isLoading } = useDataFetcher<IpodApi.Album[]>({
+  const { data: albums, isLoading } = useDataFetcher<MediaApi.Album[]>({
     name: "artist",
     id,
     inLibrary,

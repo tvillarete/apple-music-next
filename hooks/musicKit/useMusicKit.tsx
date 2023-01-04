@@ -97,7 +97,7 @@ export const MusicKitProvider = ({ children }: Props) => {
           new URLSearchParams(window.location.search).get("token") ??
           undefined,
         app: {
-          name: "iPod.js",
+          name: "Apple Music.js",
           build: "1.0",
         },
       });

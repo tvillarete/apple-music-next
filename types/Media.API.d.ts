@@ -1,4 +1,4 @@
-declare namespace IpodApi {
+declare namespace MediaApi {
   interface Artwork {
     url: string;
   }

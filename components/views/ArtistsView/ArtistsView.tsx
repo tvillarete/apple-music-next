@@ -12,7 +12,7 @@ import styled from "styled-components";
 const RootContainer = styled.div``;
 
 interface Props {
-  artists?: IpodApi.Artist[];
+  artists?: MediaApi.Artist[];
   inLibrary?: boolean;
   showImages?: boolean;
 }
@@ -24,10 +24,12 @@ const ArtistsView = ({
 }: Props) => {
   const { viewStack } = useViewContext();
   const { isAuthorized } = useSettings();
-  const { data: fetchedArtists, isLoading } = useDataFetcher<IpodApi.Artist[]>({
-    name: "artists",
-    lazy: !!artists,
-  });
+  const { data: fetchedArtists, isLoading } = useDataFetcher<MediaApi.Artist[]>(
+    {
+      name: "artists",
+      lazy: !!artists,
+    }
+  );
 
   const options: SelectableListOption[] = useMemo(
     () =>

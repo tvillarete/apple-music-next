@@ -9,4 +9,4 @@
 /// <reference path="MusicKit.Player.d.ts" />
 /// <reference path="MusicKit.Queue.d.ts" />
 /// <reference path="MusicKit.SetQueueOptions.d.ts" />
-/// <reference path="Ipod.API.d.ts" />
+/// <reference path="Media.API.d.ts" />
