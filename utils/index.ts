@@ -29,8 +29,8 @@ export const formatTime = (seconds = 0, guide = seconds) => {
 
 export const setDocumentSongTitle = (song?: AppleMusicApi.Song) => {
   document.title = song
-    ? `${song.attributes?.name ?? "Music"} – Music.js`
-    : "Music.js";
+    ? `${song.attributes?.name ?? "Music"} – iPod.js`
+    : "iPod.js";
 };
 
 /** Returns a list of playback options to display in a popup for an album, song, or playlist. */
@@ -38,8 +38,6 @@ export const getMediaOptions = (
   type: "album" | "song" | "playlist",
   id: string
 ): SelectableListOption[] => {
-  // TODO: Replace with actual options
-  return [];
   const music = window.MusicKit.getInstance();
 
   return [

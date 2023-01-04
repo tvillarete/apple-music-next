@@ -12,12 +12,25 @@ const RootContainer = styled.div`
   height: 100%;
 `;
 
-const AppleMusicApp = () => {
+interface Props {
+  appleAccessToken: string;
+  spotifyAccessToken?: string;
+  spotifyRefreshToken?: string;
+}
+
+const AppleMusicApp = ({
+  appleAccessToken,
+  spotifyAccessToken,
+  spotifyRefreshToken,
+}: Props) => {
   return (
     <RootContainer>
       <ViewContextProvider>
-        <SpotifySDKProvider>
-          <MusicKitProvider>
+        <SpotifySDKProvider
+          initialAccessToken={spotifyAccessToken}
+          refreshToken={spotifyRefreshToken}
+        >
+          <MusicKitProvider token={appleAccessToken}>
             <AudioPlayerProvider>
               <ViewManager />
               <AudioControls />
