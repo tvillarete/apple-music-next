@@ -25,7 +25,7 @@ const Home: NextPage<Props> = ({
         <meta name="description" content="iOS Music app built for the web" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
-        <meta property="og:title" content="iPod.js" />
+        <meta property="og:title" content="Apple Music.js" />
         <meta property="og:type" content="website" />
         <meta property="og:description" content="Apple Music for the web" />
         <meta
@@ -55,7 +55,7 @@ const Home: NextPage<Props> = ({
         <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5" />
 
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-        <title>iPod.js</title>
+        <title>Apple Music.js</title>
       </Head>
       <main className={styles.main}>
         <SettingsProvider>

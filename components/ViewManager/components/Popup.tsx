@@ -1,17 +1,11 @@
 import { useMemo } from "react";
 
 import { popInAnimation } from "animation";
-import { SelectableListOption } from "components";
-import { WINDOW_TYPE } from "components/views";
+import { SelectableListOption } from "components/SelectableList";
 import { motion } from "framer-motion";
-import {
-  useEventListener,
-  useMenuHideView,
-  useScrollHandler,
-  useViewContext,
-} from "hooks";
+import { useEventListener, useViewContext } from "hooks";
 import { ViewOptions } from "providers/ViewContextProvider";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { Unit } from "utils/constants";
 import { IpodEvent } from "utils/events";
 
@@ -81,20 +75,11 @@ const OptionText = styled.h3`
   text-shadow: 0px 0px 1px #505050;
 `;
 
-const OptionContainer = styled.div<{ highlighted: boolean }>`
+const OptionContainer = styled.div`
   flex: 1;
   text-align: center;
   border: 2px solid transparent;
   margin-top: 8px;
-
-  ${({ highlighted }) =>
-    highlighted &&
-    css`
-      ${OptionText} {
-        border: 2px solid #ececec;
-        filter: brightness(120%);
-      }
-    `};
 `;
 
 interface Props {
@@ -105,29 +90,26 @@ interface Props {
 
 const Popup = ({ viewStack, index, isHidden }: Props) => {
   const viewOptions = viewStack[index];
-  useMenuHideView(viewOptions.id);
   const { hideView } = useViewContext();
 
-  if (viewOptions.type !== WINDOW_TYPE.Popup) {
+  if (viewOptions.type !== "popup") {
     throw new Error("Popup option not supplied");
   }
 
   const listOptions: SelectableListOption[] = useMemo(() => {
     const listOptions =
-      viewOptions.type === WINDOW_TYPE.Popup ? viewOptions.listOptions : [];
+      viewOptions.type === "popup" ? viewOptions.listOptions : [];
 
     return listOptions.length
       ? listOptions
       : [
           {
-            type: "Action",
+            type: "action",
             label: "Done",
             onSelect: () => {},
           },
         ];
   }, [viewOptions.listOptions, viewOptions.type]);
-
-  const [scrollIndex] = useScrollHandler(viewOptions.id, listOptions);
 
   useEventListener<IpodEvent>("centerclick", () => {
     hideView();
@@ -144,10 +126,7 @@ const Popup = ({ viewStack, index, isHidden }: Props) => {
         <DescriptionText>{viewOptions.description}</DescriptionText>
         <OptionsContainer>
           {listOptions.map((option, i) => (
-            <OptionContainer
-              key={`popup-option-${option.label}`}
-              highlighted={scrollIndex === i}
-            >
+            <OptionContainer key={`popup-option-${option.label}`}>
               <OptionText>{option.label}</OptionText>
             </OptionContainer>
           ))}

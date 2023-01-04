@@ -82,17 +82,12 @@ const ActionSheet = ({ viewStack, index, isHidden }: Props) => {
     return [
       ...listOptions,
       {
-        type: "Action",
+        type: "action",
         label: "Cancel",
         onSelect: () => {},
       },
     ];
   }, [viewOptions]);
-
-  const selectedOption: SelectableListOption | undefined = useMemo(
-    () => options.find((option) => option.isSelected === true),
-    [options]
-  );
 
   useEventListener<IpodEvent>("centerclick", () => {
     hideView();

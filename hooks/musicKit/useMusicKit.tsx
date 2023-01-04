@@ -84,7 +84,7 @@ export const MusicKitProvider = ({ children, token }: Props) => {
       const music = await window.MusicKit.configure({
         developerToken: token,
         app: {
-          name: "iPod.js",
+          name: "Apple Music.js",
           build: "1.0",
         },
       });
