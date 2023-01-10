@@ -1,14 +1,15 @@
+import Icon from "components/Icon/Icon";
 import { MouseEventHandler } from "react";
 import styled from "styled-components";
 import { Unit } from "utils/constants";
 
 import { SelectableListOption } from ".";
 
-const RootButtonContainer = styled.button`
+const RootButtonContainer = styled.button<{ $hasImage: boolean }>`
   width: 100%;
   border: none;
   background-color: white;
-  padding: 0;
+  padding-left: ${({ $hasImage }) => ($hasImage ? 0 : "16px")};
   margin: 0;
   appearance: none;
   display: flex;
@@ -22,7 +23,7 @@ const RootButtonContainer = styled.button`
 `;
 
 const IconContainer = styled.div`
-  margin-left: 16px;
+  margin: 0 8px 0 16px;
 `;
 
 const ContentContainer = styled.div`
@@ -67,7 +68,7 @@ const Image = styled.img`
   margin-right: ${Unit.XXS};
 `;
 
-const Icon = styled.img`
+const StyledArrowRight = styled(Icon)`
   margin-left: auto;
 `;
 
@@ -77,11 +78,16 @@ interface Props {
 }
 
 const SelectableListItem = ({ option, onClick }: Props) => {
+  const hasImage = !!option.imageUrl;
+  const hasIconLeft = !!option.iconLeft;
+  const hasImageOrIconLeft = hasImage || hasIconLeft;
+
   return (
-    <RootButtonContainer onClick={onClick}>
-      {option.imageUrl && (
+    <RootButtonContainer onClick={onClick} $hasImage={hasImageOrIconLeft}>
+      {hasImageOrIconLeft && (
         <IconContainer>
-          <Image src={option.imageUrl} alt="Option image" />
+          {hasImage && <Image src={option.imageUrl} alt="Option image" />}
+          {hasIconLeft && <Icon {...option.iconLeft!} />}
         </IconContainer>
       )}
 
@@ -91,7 +97,7 @@ const SelectableListItem = ({ option, onClick }: Props) => {
           {option.subLabel && <SubLabel>{option.subLabel}</SubLabel>}
         </LeftContentContainer>
         <RightContentContainer>
-          <Icon src="chevron-right.svg" />
+          <StyledArrowRight size="xsmall" color="#C5C5C6" name="arrowRight" />
         </RightContentContainer>
       </ContentContainer>
     </RootButtonContainer>

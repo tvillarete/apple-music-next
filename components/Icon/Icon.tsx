@@ -34,15 +34,22 @@ interface IconProps {
   size?: IconSize;
   color?: string;
   onClick?: () => void;
+  className?: string;
 }
 
-const Icon = ({ name, size = "xxsmall", onClick, ...iconProps }: IconProps) => {
+const Icon = ({
+  name,
+  size = "xxsmall",
+  onClick,
+  className,
+  ...iconProps
+}: IconProps) => {
   const DesiredIcon = useMemo(() => allIcons[name], [name]);
 
   const dimensions = useMemo(() => getIconDimensionsForSize(size), [size]);
 
   return (
-    <div onClick={onClick} {...dimensions}>
+    <div className={className} onClick={onClick} {...dimensions}>
       <React.Suspense fallback={<></>}>
         <DesiredIcon {...dimensions} {...iconProps} />
       </React.Suspense>

@@ -8,6 +8,8 @@ import LoadingScreen from "components/LoadingScreen";
 import { ViewOption } from "components/views";
 import { useAudioPlayer, useViewContext } from "hooks";
 import SelectableListItem from "./SelectableListItem";
+import { IconProps } from "components/Icon/icons/sharedTypes";
+import { IconName } from "components/Icon/Icon";
 
 export const getConditionalOption = (
   condition?: boolean,
@@ -28,6 +30,9 @@ type SharedOptionProps = {
   isSelected?: boolean;
   subLabel?: string;
   imageUrl?: string;
+  iconLeft?: IconProps & {
+    name: IconName;
+  };
   longPressOptions?: SelectableListOption[];
 };
 
@@ -90,7 +95,6 @@ export type SelectableListOption = SharedOptionProps &
 
 const RootContainer = styled.div`
   width: 100%;
-  padding: 0 16px;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 `;
