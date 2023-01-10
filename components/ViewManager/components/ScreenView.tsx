@@ -30,6 +30,7 @@ export const AnimatedRootContainer = styled(motion.div)<{
   left: 0;
   right: 0;
   padding-top: 84px;
+  padding-bottom: 100px;
   background-color: white;
   box-shadow: 0px 8px 64px rgba(33, 30, 30, 0.1);
   filter: ${({ $isInactive }) => $isInactive && "brightness(0.8)"};
@@ -51,7 +52,6 @@ const ContentTransitionContainer = styled.div<ContentTransitionContainerProps>`
 interface Props {
   viewStack: ViewOptions[];
   index: number;
-  isHidden: boolean;
 }
 
 const ScreenView = ({ viewStack, index }: Props) => {
@@ -80,7 +80,7 @@ const ScreenView = ({ viewStack, index }: Props) => {
         {...(firstInStack ? noAnimation : slideRightAnimation)}
         $isInactive={isInactive}
       >
-        <ContentTransitionContainer isHidden={index < viewStack.length - 1}>
+        <ContentTransitionContainer isHidden={isInactive}>
           <ViewComponent />
         </ContentTransitionContainer>
       </AnimatedRootContainer>

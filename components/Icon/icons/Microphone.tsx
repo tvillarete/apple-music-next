@@ -15,8 +15,8 @@ const Microphone = React.memo(
         fill="currentColor"
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M11.6864 20.843C11.6864 20.686 11.6864 12.093 11.6864 12.093L10.6864 12.993C10.6864 16.0586 10.6864 20.686 10.6864 20.843C10.6864 21 11.6864 21 11.6864 20.843Z"
         fill="currentColor"
       />

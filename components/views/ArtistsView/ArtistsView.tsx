@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useDataFetcher, useSettings, useViewContext } from "hooks";
+import { useSettings, useViewContext } from "hooks";
 import * as Utils from "utils";
 
 import SelectableList, {
@@ -8,6 +8,8 @@ import SelectableList, {
 } from "components/SelectableList";
 import { ArtistView } from "components/views/ArtistView";
 import styled from "styled-components";
+import { useFetchArtists } from "hooks/utils/useDataFetcher";
+import { views } from "components/views";
 
 const RootContainer = styled.div``;
 
@@ -22,35 +24,39 @@ const ArtistsView = ({
   inLibrary = true,
   showImages = false,
 }: Props) => {
-  const { viewStack } = useViewContext();
+  const { viewStack, setScreenViewOptions } = useViewContext();
   const { isAuthorized } = useSettings();
-  const { data: fetchedArtists, isLoading } = useDataFetcher<MediaApi.Artist[]>(
-    {
-      name: "artists",
-      lazy: !!artists,
-    }
-  );
+  const {
+    data: fetchedArtists,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading: isQueryLoading,
+  } = useFetchArtists({
+    lazy: !!artists,
+  });
 
-  const options: SelectableListOption[] = useMemo(
-    () =>
-      (artists ?? fetchedArtists)?.map((artist) => ({
+  const options: SelectableListOption[] = useMemo(() => {
+    const data =
+      artists ?? fetchedArtists?.pages.flatMap((page) => page?.data ?? []);
+
+    return (
+      data?.map((artist) => ({
         type: "view",
-        title: artist.name,
+        headerTitle: artist.name,
         label: artist.name,
-        viewId: "artist",
+        viewId: views.artist.id,
         imageUrl: showImages
           ? Utils.getArtwork(50, artist.artwork?.url) ?? "artists_icon.svg"
           : "",
         component: () => <ArtistView id={artist.id} inLibrary={inLibrary} />,
-      })) ?? [],
-    [artists, fetchedArtists, inLibrary, showImages]
-  );
+      })) ?? []
+    );
+  }, [artists, fetchedArtists, inLibrary, showImages]);
 
-  const prevView = useMemo(() => {
-    const curViewIndex = viewStack.findIndex((view) => view.id === "artists");
-
-    return curViewIndex - 1 >= 0 ? viewStack[curViewIndex - 1] : undefined;
-  }, [viewStack]);
+  // If accessing ArtistsView from the SearchView, and there is no data cached,
+  // 'isQueryLoading' will be true. To prevent an infinite loading screen in these
+  // cases, we'll check if we have any 'options'
+  const isLoading = !options.length && isQueryLoading;
 
   return (
     <RootContainer>

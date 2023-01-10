@@ -26,7 +26,6 @@ const ScreenViewManager = ({ viewStack }: Props) => {
             key={`view-${view.id}`}
             viewStack={viewStack}
             index={index}
-            isHidden={index < viewStack.length - 1}
           />
         ))}
       </AnimatePresence>

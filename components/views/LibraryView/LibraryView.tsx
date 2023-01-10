@@ -1,16 +1,38 @@
-import { memo, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
 import { ArtistsView } from "components/views/ArtistsView";
-import { useSpotifySDK } from "hooks";
+import { useSettings, useSpotifySDK, useViewContext } from "hooks";
 import styled from "styled-components";
+import { AlbumsView } from "components/views/AlbumsView";
 
 const RootContainer = styled.div``;
 
 const LibraryView = () => {
-  const { signIn: signInWithSpotify } = useSpotifySDK();
+  const { isAuthorized } = useSettings();
+  const { signIn: signInWithSpotify, signOut: signOutSpotify } =
+    useSpotifySDK();
+  const { setScreenViewOptions } = useViewContext();
+
+  const handleChangedAuthStatus = useCallback(
+    (value: boolean) => {
+      setScreenViewOptions("library", {
+        headerRightActions: [
+          {
+            onClick: value ? signOutSpotify : signInWithSpotify,
+            title: value ? "Sign out" : "Sign in",
+          },
+        ],
+      });
+    },
+    [setScreenViewOptions, signInWithSpotify, signOutSpotify]
+  );
+
+  useEffect(() => {
+    handleChangedAuthStatus(isAuthorized);
+  }, [handleChangedAuthStatus, isAuthorized]);
 
   const options: SelectableListOption[] = useMemo(
     () => [
@@ -31,9 +53,9 @@ const LibraryView = () => {
       {
         type: "view",
         label: "Albums",
-        viewId: "artists",
+        viewId: "albums",
         iconLeft: { name: "album", size: "small", color: "#D34C4B" },
-        component: () => <ArtistsView />,
+        component: () => <AlbumsView />,
       },
     ],
     []
@@ -42,7 +64,6 @@ const LibraryView = () => {
   return (
     <RootContainer>
       <SelectableList options={options} />
-      <button onClick={signInWithSpotify}>Sign in Spotify</button>
     </RootContainer>
   );
 };

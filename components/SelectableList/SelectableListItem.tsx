@@ -1,11 +1,16 @@
 import Icon from "components/Icon/Icon";
 import { MouseEventHandler } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Unit } from "utils/constants";
 
 import { SelectableListOption } from ".";
 
-const RootButtonContainer = styled.button<{ $hasImage: boolean }>`
+type ListItemVariant = "list" | "grid";
+
+const RootButtonContainer = styled.button<{
+  $hasImage: boolean;
+  $variant: ListItemVariant;
+}>`
   width: 100%;
   border: none;
   background-color: white;
@@ -16,17 +21,39 @@ const RootButtonContainer = styled.button<{ $hasImage: boolean }>`
   align-items: center;
   height: 57px;
   cursor: pointer;
+  user-select: none;
 
   :active {
     background-color: rgba(0, 0, 0, 0.07);
   }
+
+  ${({ $variant }) =>
+    $variant === "grid"
+      ? css`
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding-left: 0;
+          height: unset;
+          width: 100%;
+          max-width: 250px;
+
+          :active {
+            background-color: unset;
+
+            img {
+              filter: brightness(0.8);
+            }
+          }
+        `
+      : null};
 `;
 
-const IconContainer = styled.div`
-  margin: 0 8px 0 16px;
+const IconContainer = styled.div<{ $variant: ListItemVariant }>`
+  margin: ${({ $variant }) => ($variant === "list" ? "0 8px 0 16px" : "0")};
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{ $variant: ListItemVariant }>`
   flex: 1;
   display: grid;
   align-items: center;
@@ -34,12 +61,26 @@ const ContentContainer = styled.div`
   height: 100%;
   border-bottom: 0.5px solid rgba(60, 60, 67, 0.36);
   text-align: left;
+
+  ${({ $variant }) =>
+    $variant === "grid"
+      ? css`
+          grid-template-columns: unset;
+          border-bottom: none;
+          width: 100%;
+        `
+      : null};
 `;
 
-const LeftContentContainer = styled.div`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const LeftContentContainer = styled.div<{ $variant: ListItemVariant }>`
+  ${({ $variant }) =>
+    $variant === "list"
+      ? css`
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        `
+      : null};
 `;
 
 const RightContentContainer = styled.div`
@@ -56,16 +97,28 @@ const Label = styled.p`
   line-height: 22px;
 `;
 
-const SubLabel = styled(Label)`
+const SubLabel = styled(Label)<{ $variant: ListItemVariant }>`
   font-weight: normal;
-  font-size: 12px;
+  font-size: ${({ $variant }) => ($variant === "grid" ? "14px" : "12px")};
   color: #3c3c4399;
 `;
 
-const Image = styled.img`
+const Image = styled.img<{ $variant: ListItemVariant }>`
   height: 3rem;
   width: 3rem;
   margin-right: ${Unit.XXS};
+  pointer-events: none;
+
+  ${({ $variant }) =>
+    $variant === "grid"
+      ? css`
+          height: auto;
+          max-height: 250px;
+          width: 100%;
+          max-width: 250px;
+          border-radius: 8px;
+        `
+      : null}
 `;
 
 const StyledArrowRight = styled(Icon)`
@@ -75,30 +128,46 @@ const StyledArrowRight = styled(Icon)`
 interface Props {
   option: SelectableListOption;
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+  variant: ListItemVariant;
 }
 
-const SelectableListItem = ({ option, onClick }: Props) => {
+const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
   const hasImage = !!option.imageUrl;
-  const hasIconLeft = !!option.iconLeft;
+  const hasIconLeft = !!option.iconLeft && variant === "list";
+  const hasIconRight = variant === "list";
   const hasImageOrIconLeft = hasImage || hasIconLeft;
 
   return (
-    <RootButtonContainer onClick={onClick} $hasImage={hasImageOrIconLeft}>
+    <RootButtonContainer
+      onClick={onClick}
+      $hasImage={hasImageOrIconLeft}
+      $variant={variant}
+    >
       {hasImageOrIconLeft && (
-        <IconContainer>
-          {hasImage && <Image src={option.imageUrl} alt="Option image" />}
+        <IconContainer $variant={variant}>
+          {hasImage && (
+            <Image
+              $variant={variant}
+              src={option.imageUrl}
+              alt="Option image"
+            />
+          )}
           {hasIconLeft && <Icon {...option.iconLeft!} />}
         </IconContainer>
       )}
 
-      <ContentContainer>
-        <LeftContentContainer>
+      <ContentContainer $variant={variant}>
+        <LeftContentContainer $variant={variant}>
           <Label>{option.label}</Label>
-          {option.subLabel && <SubLabel>{option.subLabel}</SubLabel>}
+          {option.subLabel && (
+            <SubLabel $variant={variant}>{option.subLabel}</SubLabel>
+          )}
         </LeftContentContainer>
-        <RightContentContainer>
-          <StyledArrowRight size="xsmall" color="#C5C5C6" name="arrowRight" />
-        </RightContentContainer>
+        {hasIconRight && (
+          <RightContentContainer>
+            <StyledArrowRight size="xsmall" color="#C5C5C6" name="arrowRight" />
+          </RightContentContainer>
+        )}
       </ContentContainer>
     </RootButtonContainer>
   );

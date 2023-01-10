@@ -3,8 +3,8 @@ import { useMemo } from "react";
 import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
-import { useDataFetcher } from "hooks";
 import * as Utils from "utils";
+import { useFetchAlbum } from "hooks/utils/useDataFetcher";
 
 interface Props {
   id: string;
@@ -13,8 +13,7 @@ interface Props {
 }
 
 const AlbumView = ({ id, inLibrary = false }: Props) => {
-  const { data: album, isLoading } = useDataFetcher<MediaApi.Album>({
-    name: "album",
+  const { data: album, isLoading } = useFetchAlbum({
     id,
     inLibrary,
   });

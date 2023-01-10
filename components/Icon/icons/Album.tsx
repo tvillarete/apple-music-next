@@ -13,7 +13,7 @@ const Album = React.memo(
       <path
         d="M2 7H15C15.5523 7 16 7.44772 16 8V20C16 20.5523 15.5523 21 15 21H2C1.44772 21 1 20.5523 1 20V8C1 7.44772 1.44772 7 2 7Z"
         stroke="currentColor"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <mask id="path-2-inside-1_1053_9" fill="white">
         <path d="M13 3H4C2.89543 3 2 3.89543 2 5H15C15 3.89543 14.1046 3 13 3Z" />

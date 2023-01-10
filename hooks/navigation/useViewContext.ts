@@ -1,6 +1,10 @@
 import { useCallback, useContext } from "react";
 
-import { ViewContext, ViewOptions } from "providers/ViewContextProvider";
+import {
+  ScreenViewOptionProps,
+  ViewContext,
+  ViewOptions,
+} from "providers/ViewContextProvider";
 
 export interface ViewContextHook {
   /** Push an instance of ViewOptions to the viewStack. */
@@ -15,7 +19,10 @@ export interface ViewContextHook {
    * Useful for enabling/disabling scrolling if a view is hidden.
    */
   isViewActive: (id: string) => boolean;
-  setHeaderTitle: (title?: string) => void;
+  setScreenViewOptions: (
+    viewId: ViewOptions["id"],
+    options: Partial<Omit<ScreenViewOptionProps, "id">>
+  ) => void;
 }
 
 /**
@@ -79,12 +86,37 @@ export const useViewContext = (): ViewContextHook => {
     [viewContextState]
   );
 
-  const setHeaderTitle = useCallback(
-    (title?: string) => {
-      setViewContextState((prevState) => ({
-        ...prevState,
-        headerTitle: title,
-      }));
+  const setScreenViewOptions = useCallback(
+    (
+      viewId: ViewOptions["id"],
+      options: Partial<Omit<ScreenViewOptionProps, "id">>
+    ) => {
+      setViewContextState((prevState) => {
+        const viewIndex = prevState.viewStack.findIndex(
+          ({ id }) => id === viewId
+        );
+
+        if (viewIndex === -1) {
+          console.error("View not found: ", viewId);
+          return prevState;
+        }
+
+        const view = prevState.viewStack[viewIndex];
+
+        if (view?.type !== "screen") {
+          console.error("View is not a screen: ", view);
+          return prevState;
+        }
+
+        const updatedView = { ...view, ...options };
+        const newViewStack = [...prevState.viewStack];
+        newViewStack[viewIndex] = updatedView;
+
+        return {
+          ...prevState,
+          viewStack: newViewStack,
+        };
+      });
     },
     [setViewContextState]
   );
@@ -95,7 +127,7 @@ export const useViewContext = (): ViewContextHook => {
     resetViews: resetViews,
     isViewActive: isViewActive,
     viewStack: viewContextState.viewStack,
-    setHeaderTitle,
+    setScreenViewOptions,
   };
 };
 

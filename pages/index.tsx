@@ -5,6 +5,7 @@ import { SettingsProvider } from "hooks";
 import Script from "next/script";
 import { AppleMusicApp } from "components/AppleMusicApp";
 import styles from "../styles/Home.module.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 type Props = {
   spotifyAccessToken: string;
@@ -17,6 +18,8 @@ const Home: NextPage<Props> = ({
   spotifyAccessToken,
   spotifyRefreshToken,
 }) => {
+  const queryClient = new QueryClient();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -58,13 +61,15 @@ const Home: NextPage<Props> = ({
         <title>Apple Music.js</title>
       </Head>
       <main className={styles.main}>
-        <SettingsProvider>
-          <AppleMusicApp
-            spotifyAccessToken={spotifyAccessToken}
-            spotifyRefreshToken={spotifyRefreshToken}
-            appleAccessToken={appleAccessToken}
-          />
-        </SettingsProvider>
+        <QueryClientProvider client={queryClient}>
+          <SettingsProvider>
+            <AppleMusicApp
+              spotifyAccessToken={spotifyAccessToken}
+              spotifyRefreshToken={spotifyRefreshToken}
+              appleAccessToken={appleAccessToken}
+            />
+          </SettingsProvider>
+        </QueryClientProvider>
       </main>
       <Script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js" />
       <Script src="https://sdk.scdn.co/spotify-player.js" />

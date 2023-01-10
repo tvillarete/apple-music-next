@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 
 import ErrorScreen from "components/ErrorScreen";
 import { AnimatePresence } from "framer-motion";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import LoadingScreen from "components/LoadingScreen";
 import { ViewOption } from "components/views";
@@ -42,7 +42,7 @@ type ViewOptionProps = {
   viewId: ViewOption["id"];
   /** The component that will be displayed in the next view. */
   component: () => JSX.Element;
-  title?: string;
+  headerTitle?: string;
 };
 
 type LinkOptionProps = {
@@ -93,22 +93,34 @@ export type SelectableListOption = SharedOptionProps &
     | PopupOptionProps
   );
 
-const RootContainer = styled.div`
+const RootContainer = styled.div<{ $variant: "list" | "grid" }>`
   width: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+
+  ${({ $variant }) =>
+    $variant === "grid"
+      ? css`
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-gap: 30px;
+          padding: 16px;
+          align-items: stretch;
+          justify-items: center;
+        `
+      : null};
 `;
 
 interface Props {
   options: SelectableListOption[];
   loading?: boolean;
   emptyMessage?: string;
+  variant?: "list" | "grid";
 }
 
 const SelectableList = ({
   options,
   loading,
   emptyMessage = "Nothing to see here",
+  variant = "list",
 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { showView } = useViewContext();
@@ -119,7 +131,7 @@ const SelectableList = ({
       showView({
         id: option.viewId,
         type: "screen",
-        title: option.title,
+        title: option.headerTitle,
         component: option.component,
       });
     },
@@ -151,12 +163,13 @@ const SelectableList = ({
       {loading ? (
         <LoadingScreen backgroundColor="white" />
       ) : options.length > 0 ? (
-        <RootContainer ref={containerRef}>
+        <RootContainer ref={containerRef} $variant={variant}>
           {options.map((option, index) => (
             <SelectableListItem
               key={`option-${option.label}-${index}`}
               option={option}
               onClick={() => handleClick(option)}
+              variant={variant}
             />
           ))}
         </RootContainer>

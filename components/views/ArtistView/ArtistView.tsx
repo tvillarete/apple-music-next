@@ -5,8 +5,8 @@ import SelectableList, {
 } from "components/SelectableList";
 import { views } from "components/views";
 import { AlbumView } from "components/views/AlbumView";
-import { useDataFetcher } from "hooks";
 import * as Utils from "utils";
+import { useFetchArtistAlbums } from "hooks/utils/useDataFetcher";
 
 interface Props {
   id: string;
@@ -15,8 +15,7 @@ interface Props {
 }
 
 const ArtistView = ({ id, inLibrary = false }: Props) => {
-  const { data: albums, isLoading } = useDataFetcher<MediaApi.Album[]>({
-    name: "artist",
+  const { data: albums, isLoading } = useFetchArtistAlbums({
     id,
     inLibrary,
   });
@@ -24,9 +23,9 @@ const ArtistView = ({ id, inLibrary = false }: Props) => {
     () =>
       albums?.map((album) => ({
         type: "view",
-        title: album.name,
+        headerTitle: album.name,
         label: album.name,
-        sublabel: album.artistName,
+        subLabel: album.artistName,
         imageUrl: Utils.getArtwork(100, album.artwork?.url),
         viewId: views.album.id,
         component: () => (

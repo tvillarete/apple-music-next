@@ -2,6 +2,7 @@ import { createContext, useState } from "react";
 
 import { SelectableListOption } from "components/SelectableList";
 import { LibraryView, ViewOption, views } from "components/views";
+import { ScreenViewHeaderActionProps } from "components/ScreenViewHeader/ScreenViewHeaderAction";
 
 type SharedOptionProps = {
   id: ViewOption["id"];
@@ -12,18 +13,20 @@ type SharedOptionProps = {
   styles?: Record<string, any>;
 };
 
-type ScreenViewOptionProps<TComponent extends React.ComponentType<any> = any> =
-  {
-    /** These view types allow you to pass in a custom component to render. */
-    type: "screen";
-    /** The React component that will be rendered in the view. */
-    component: TComponent;
-    /** Props that will be passed to the component. */
-    props?: Omit<React.ComponentProps<TComponent>, "id">;
-    /** Fire an event when the view closes. */
-    onClose?: (..._args: any[]) => void;
-    title?: string;
-  };
+export type ScreenViewOptionProps<
+  TComponent extends React.ComponentType<any> = any
+> = {
+  /** These view types allow you to pass in a custom component to render. */
+  type: "screen";
+  /** The React component that will be rendered in the view. */
+  component: TComponent;
+  /** Props that will be passed to the component. */
+  props?: Omit<React.ComponentProps<TComponent>, "id">;
+  /** Fire an event when the view closes. */
+  onClose?: (..._args: any[]) => void;
+  title?: string;
+  headerRightActions?: ScreenViewHeaderActionProps[];
+};
 
 type ActionSheetViewOptionProps = {
   type: "actionSheet";

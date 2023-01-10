@@ -1,6 +1,11 @@
-import { SCREEN_ANIMATION_DURATION, slideRightAnimation } from "animation";
+import {
+  fade,
+  SCREEN_ANIMATION_DURATION,
+  slideRightAnimation,
+} from "animation";
 import Icon from "components/Icon/Icon";
 import { backArrowAnimation } from "components/ScreenViewHeader/animation";
+import ScreenViewHeaderAction from "components/ScreenViewHeader/ScreenViewHeaderAction";
 import { ViewId, views } from "components/views";
 import { AnimatePresence, motion } from "framer-motion";
 import { useViewContext } from "hooks";
@@ -36,6 +41,16 @@ const BackButtonIconContainer = styled(motion.div)`
   position: absolute;
   top: 1px;
   left: -4px;
+`;
+
+const RightActionsContainer = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+  float: right;
 `;
 
 const Text = styled(motion.p)<{
@@ -129,6 +144,18 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
     return viewOptions.title ?? views[viewId].title;
   }, [viewId, viewOptions]);
 
+  const rightActions = useMemo(() => {
+    if (viewOptions?.type !== "screen") {
+      return undefined;
+    }
+
+    return (
+      viewOptions.headerRightActions?.map((action) => (
+        <ScreenViewHeaderAction key={`action-${action.title}`} {...action} />
+      )) ?? []
+    );
+  }, [viewOptions]);
+
   const backButtonText = useMemo(() => {
     if (prevViewOptions?.type !== "screen") {
       return undefined;
@@ -173,6 +200,13 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
             </motion.div>
           ) : null}
         </BackButtonContainer>
+        <AnimatePresence>
+          {rightActions && isActiveView ? (
+            <RightActionsContainer key="right-actions-container" {...fade}>
+              {rightActions}
+            </RightActionsContainer>
+          ) : null}
+        </AnimatePresence>
       </TopRowContainer>
       <AnimatePresence>
         {viewOptions ? (
