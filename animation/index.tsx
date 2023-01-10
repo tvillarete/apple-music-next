@@ -11,7 +11,7 @@ export type AnimationProperties = {
 
 export const slideRightAnimation: AnimationProperties = {
   variants: {
-    closed: { x: "100%" },
+    closed: { x: "110%" },
     open: {
       x: 0,
       transition: {
@@ -21,7 +21,7 @@ export const slideRightAnimation: AnimationProperties = {
       },
     },
     closing: {
-      x: "100%",
+      x: "110%",
       transition: {
         duration: SCREEN_ANIMATION_DURATION,
         type: "tween",

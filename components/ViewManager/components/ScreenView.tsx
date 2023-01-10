@@ -20,7 +20,9 @@ const RootContainer = styled.div<ContainerProps>`
   z-index: ${(props) => props.index};
 `;
 
-export const AnimatedRootContainer = styled(motion.div)`
+export const AnimatedRootContainer = styled(motion.div)<{
+  $isInactive: boolean;
+}>`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -29,6 +31,9 @@ export const AnimatedRootContainer = styled(motion.div)`
   right: 0;
   padding-top: 84px;
   background-color: white;
+  box-shadow: 0px 8px 64px rgba(33, 30, 30, 0.1);
+  filter: ${({ $isInactive }) => $isInactive && "brightness(0.8)"};
+  transition: filter ${SCREEN_ANIMATION_DURATION}s ease-in-out;
 `;
 
 interface ContentTransitionContainerProps {
@@ -52,6 +57,7 @@ interface Props {
 const ScreenView = ({ viewStack, index }: Props) => {
   const options = viewStack[index];
   const firstInStack = index === 0;
+  const isInactive = index < viewStack.length - 1;
 
   const ViewComponent = useMemo(() => {
     switch (options.type) {
@@ -72,6 +78,7 @@ const ScreenView = ({ viewStack, index }: Props) => {
       <AnimatedRootContainer
         data-view-id={options.id}
         {...(firstInStack ? noAnimation : slideRightAnimation)}
+        $isInactive={isInactive}
       >
         <ContentTransitionContainer isHidden={index < viewStack.length - 1}>
           <ViewComponent />
