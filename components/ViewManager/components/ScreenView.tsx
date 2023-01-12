@@ -44,7 +44,7 @@ interface ContentTransitionContainerProps {
 /** Slides the view to the left if it isn't at the top of the stack. */
 const ContentTransitionContainer = styled.div<ContentTransitionContainerProps>`
   height: 100%;
-  transition: transform ${SCREEN_ANIMATION_DURATION}s;
+  transition: transform ${SCREEN_ANIMATION_DURATION}s ease-in-out;
   transform: ${(props) => props.isHidden && "translateX(-20%)"};
   overflow: auto;
 `;

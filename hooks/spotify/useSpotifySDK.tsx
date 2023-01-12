@@ -30,7 +30,13 @@ export type SpotifySDKHook = SpotifySDKState & {
   signOut: () => void;
 };
 
-export const useSpotifySDK = (): SpotifySDKHook => {
+export type SpotifySDKHookProps = {
+  onAuthorizationChanged?: (isAuthorized: boolean) => void;
+};
+
+export const useSpotifySDK = ({
+  onAuthorizationChanged,
+}: SpotifySDKHookProps = {}): SpotifySDKHook => {
   const {
     isSpotifyAuthorized,
     setIsSpotifyAuthorized,
@@ -39,6 +45,16 @@ export const useSpotifySDK = (): SpotifySDKHook => {
   } = useSettings();
   const { showView } = useViewContext();
   const state = useContext(SpotifySDKContext);
+
+  const authorizationChangedRef = useRef(onAuthorizationChanged);
+
+  useEffect(() => {
+    authorizationChangedRef.current = onAuthorizationChanged;
+  }, [onAuthorizationChanged]);
+
+  useEffect(() => {
+    authorizationChangedRef.current?.(isSpotifyAuthorized);
+  }, [isSpotifyAuthorized]);
 
   /**
    * Open the Spotify OAuth login page. Once authenticated, the user will be

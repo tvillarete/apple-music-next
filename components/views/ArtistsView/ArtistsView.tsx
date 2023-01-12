@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { useSettings, useViewContext } from "hooks";
+import { useSettings } from "hooks";
 import * as Utils from "utils";
 
 import SelectableList, {
@@ -24,14 +24,8 @@ const ArtistsView = ({
   inLibrary = true,
   showImages = false,
 }: Props) => {
-  const { viewStack, setScreenViewOptions } = useViewContext();
   const { isAuthorized } = useSettings();
-  const {
-    data: fetchedArtists,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading: isQueryLoading,
-  } = useFetchArtists({
+  const { data: fetchedArtists, isLoading: isQueryLoading } = useFetchArtists({
     lazy: !!artists,
   });
 

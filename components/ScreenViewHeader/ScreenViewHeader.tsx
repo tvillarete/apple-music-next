@@ -41,6 +41,7 @@ const BackButtonIconContainer = styled(motion.div)`
   position: absolute;
   top: 1px;
   left: -4px;
+  cursor: pointer;
 `;
 
 const RightActionsContainer = styled(motion.div)`
@@ -61,7 +62,7 @@ const Text = styled(motion.p)<{
   display: inline-block;
   opacity: ${({ $isHidden }) => ($isHidden ? 0 : 1)};
   margin-left: ${({ $isHidden }) => ($isHidden ? "-100px" : "16px")};
-  color: red;
+  color: #d34c4b;
   cursor: pointer;
   transition: all ${SCREEN_ANIMATION_DURATION}s ease;
   animation: ${({ $noAnimation }) =>
@@ -177,16 +178,23 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
   return (
     <RootContainer key={`header-${viewId}`}>
       <TopRowContainer>
-        <BackButtonContainer onClick={handleBackClick}>
+        <BackButtonContainer>
           <AnimatePresence>
             {viewStack.length > 1 ? (
-              <BackButtonIconContainer {...backArrowAnimation}>
-                <Icon name="arrowLeft" color="red" size="small" />
+              <BackButtonIconContainer
+                onClick={handleBackClick}
+                {...backArrowAnimation}
+              >
+                <Icon name="arrowLeft" color="#D34C4B" size="small" />
               </BackButtonIconContainer>
             ) : null}
           </AnimatePresence>
           {backButtonText && isActiveView ? (
-            <Text $noAnimation $isHidden={isHiddenView}>
+            <Text
+              onClick={handleBackClick}
+              $noAnimation
+              $isHidden={isHiddenView}
+            >
               {backButtonText}
             </Text>
           ) : null}

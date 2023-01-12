@@ -5,14 +5,14 @@ import {
   useEffect,
   useState,
 } from "react";
+import { getServiceParam, SELECTED_SERVICE_KEY } from "utils/service";
 
 import { DeviceThemeName } from "../../utils/themes";
 
 type StreamingService = "apple" | "spotify";
 
-export const SELECTED_SERVICE_KEY = "appleMusicSelectedService";
-export const DEVICE_COLOR_KEY = "appleMusicSelectedDeviceTheme";
-export const VOLUME_KEY = "appleMusicVolume";
+export const DEVICE_COLOR_KEY = "ipodSelectedDeviceTheme";
+export const VOLUME_KEY = "ipodVolume";
 
 export interface SettingsState {
   service?: StreamingService;
@@ -103,7 +103,7 @@ interface Props {
 }
 
 export const SettingsProvider = ({ children }: Props) => {
-  const themeParam = "silver";
+  const serviceParam = getServiceParam();
 
   const [settingsState, setSettingsState] = useState<SettingsState>({
     isAppleAuthorized: false,
@@ -116,14 +116,13 @@ export const SettingsProvider = ({ children }: Props) => {
     setSettingsState((prevState) => ({
       ...prevState,
       service:
+        serviceParam ??
         (localStorage.getItem(SELECTED_SERVICE_KEY) as StreamingService) ??
         undefined,
       deviceTheme:
-        themeParam ??
-        (localStorage.getItem(DEVICE_COLOR_KEY) as DeviceThemeName) ??
-        "silver",
+        (localStorage.getItem(DEVICE_COLOR_KEY) as DeviceThemeName) ?? "silver",
     }));
-  }, [themeParam]);
+  }, [serviceParam]);
 
   useEffect(() => {
     handleMount();

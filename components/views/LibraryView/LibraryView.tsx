@@ -1,22 +1,21 @@
-import { memo, useCallback, useEffect, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
 import { ArtistsView } from "components/views/ArtistsView";
-import { useSettings, useSpotifySDK, useViewContext } from "hooks";
+import { useSpotifySDK, useViewContext } from "hooks";
 import styled from "styled-components";
 import { AlbumsView } from "components/views/AlbumsView";
 
 const RootContainer = styled.div``;
 
 const LibraryView = () => {
-  const { isAuthorized } = useSettings();
+  const { setScreenViewOptions } = useViewContext();
   const { signIn: signInWithSpotify, signOut: signOutSpotify } =
     useSpotifySDK();
-  const { setScreenViewOptions } = useViewContext();
 
-  const handleChangedAuthStatus = useCallback(
+  const handleAuthorizationChanged = useCallback(
     (value: boolean) => {
       setScreenViewOptions("library", {
         headerRightActions: [
@@ -30,9 +29,9 @@ const LibraryView = () => {
     [setScreenViewOptions, signInWithSpotify, signOutSpotify]
   );
 
-  useEffect(() => {
-    handleChangedAuthStatus(isAuthorized);
-  }, [handleChangedAuthStatus, isAuthorized]);
+  useSpotifySDK({
+    onAuthorizationChanged: handleAuthorizationChanged,
+  });
 
   const options: SelectableListOption[] = useMemo(
     () => [
