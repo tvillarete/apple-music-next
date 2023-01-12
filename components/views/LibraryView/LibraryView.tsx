@@ -7,6 +7,7 @@ import { ArtistsView } from "components/views/ArtistsView";
 import { useSpotifySDK, useViewContext } from "hooks";
 import styled from "styled-components";
 import { AlbumsView } from "components/views/AlbumsView";
+import { PlaylistsView } from "components/views/PlaylistsView";
 
 const RootContainer = styled.div``;
 
@@ -38,9 +39,9 @@ const LibraryView = () => {
       {
         type: "view",
         label: "Playlists",
-        viewId: "artists",
+        viewId: "playlists",
         iconLeft: { name: "note", size: "small", color: "#D34C4B" },
-        component: () => <ArtistsView />,
+        component: () => <PlaylistsView />,
       },
       {
         type: "view",

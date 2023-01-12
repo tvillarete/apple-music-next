@@ -4,7 +4,14 @@ export { LibraryView } from "./LibraryView";
 
 export type ViewId = ScreenId | PopupId;
 
-type ScreenId = "library" | "artists" | "artist" | "albums" | "album";
+type ScreenId =
+  | "library"
+  | "artists"
+  | "artist"
+  | "albums"
+  | "album"
+  | "playlists"
+  | "playlist";
 type PopupId = "spotifyNotSupportedPopup" | "spotifyNonPremiumPopup";
 
 export type ViewType = "screen" | "actionSheet" | "popup";
@@ -40,6 +47,16 @@ export const views: Record<ViewId, ViewOption> = {
   album: {
     id: "album",
     title: "Album",
+    type: "screen",
+  },
+  playlists: {
+    id: "playlists",
+    title: "Playlists",
+    type: "screen",
+  },
+  playlist: {
+    id: "playlist",
+    title: "Playlist",
     type: "screen",
   },
   // music: { id: "music", title: "Music", type: WINDOW_TYPE.Screen },

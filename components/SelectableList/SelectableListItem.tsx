@@ -10,6 +10,7 @@ type ListItemVariant = "list" | "grid";
 const RootButtonContainer = styled.button<{
   $hasImage: boolean;
   $variant: ListItemVariant;
+  $height?: number;
 }>`
   width: 100%;
   border: none;
@@ -19,7 +20,8 @@ const RootButtonContainer = styled.button<{
   appearance: none;
   display: flex;
   align-items: center;
-  height: 57px;
+  height: ${({ $height }) => ($height ? `${$height + 16}px` : "3rem")};
+  min-height: 57px;
   cursor: pointer;
   user-select: none;
 
@@ -95,17 +97,20 @@ const Label = styled.p`
   font-weight: 400;
   font-size: 17px;
   line-height: 22px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const SubLabel = styled(Label)<{ $variant: ListItemVariant }>`
   font-weight: normal;
-  font-size: ${({ $variant }) => ($variant === "grid" ? "14px" : "12px")};
+  font-size: ${({ $variant }) => ($variant === "grid" ? "15px" : "14px")};
   color: #3c3c4399;
 `;
 
-const Image = styled.img<{ $variant: ListItemVariant }>`
-  height: 3rem;
-  width: 3rem;
+const Image = styled.img<{ $variant: ListItemVariant; $size?: number }>`
+  height: ${({ $size }) => ($size ? `${$size}px` : "3rem")};
+  width: ${({ $size }) => ($size ? `${$size}px` : "3rem")};
   margin-right: ${Unit.XXS};
   pointer-events: none;
 
@@ -132,7 +137,7 @@ interface Props {
 }
 
 const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
-  const hasImage = !!option.imageUrl;
+  const hasImage = !!option.image;
   const hasIconLeft = !!option.iconLeft && variant === "list";
   const hasIconRight = variant === "list";
   const hasImageOrIconLeft = hasImage || hasIconLeft;
@@ -142,13 +147,16 @@ const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
       onClick={onClick}
       $hasImage={hasImageOrIconLeft}
       $variant={variant}
+      $height={option.image?.size}
     >
       {hasImageOrIconLeft && (
         <IconContainer $variant={variant}>
           {hasImage && (
             <Image
               $variant={variant}
-              src={option.imageUrl}
+              src={option.image?.url}
+              $size={option.image?.size}
+              style={option.image?.styles}
               alt="Option image"
             />
           )}

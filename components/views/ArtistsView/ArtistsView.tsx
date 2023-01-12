@@ -39,9 +39,12 @@ const ArtistsView = ({
         headerTitle: artist.name,
         label: artist.name,
         viewId: views.artist.id,
-        imageUrl: showImages
-          ? Utils.getArtwork(50, artist.artwork?.url) ?? "artists_icon.svg"
-          : "",
+        image: showImages
+          ? {
+              url:
+                Utils.getArtwork(50, artist.artwork?.url) ?? "artists_icon.svg",
+            }
+          : undefined,
         component: () => <ArtistView id={artist.id} inLibrary={inLibrary} />,
       })) ?? []
     );

@@ -24,12 +24,18 @@ export type SelectableListOptionType =
   | "actionSheet"
   | "popup";
 
+export type ImageProps = {
+  url?: string;
+  size?: number;
+  styles?: React.CSSProperties;
+};
+
 type SharedOptionProps = {
   type?: SelectableListOptionType;
   label: string;
   isSelected?: boolean;
   subLabel?: string;
-  imageUrl?: string;
+  image?: ImageProps;
   iconLeft?: IconProps & {
     name: IconName;
   };
