@@ -3,6 +3,7 @@ import React, {
   memo,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -25,7 +26,14 @@ export type MusicKitHook = MusicKitState & {
 };
 
 export const useMusicKit = (): MusicKitHook => {
-  const musicKit = typeof window === "undefined" ? undefined : window.MusicKit;
+  const musicKitRef = useRef<typeof MusicKit>();
+  let musicKit: typeof MusicKit | undefined = musicKitRef.current;
+
+  // Ensure that MusicKit is only mounted on the client side and not during SSR.
+  useEffect(() => {
+    musicKitRef.current = window.MusicKit;
+  }, []);
+
   const { setIsAppleAuthorized, isSpotifyAuthorized, setService } =
     useSettings();
   const { isConfigured, hasDevToken } = useContext(MusicKitContext);

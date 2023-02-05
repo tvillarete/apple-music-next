@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 /**
  * MusicKit has its own event listener logic that is attached to the `music` instance.
@@ -11,7 +11,7 @@ const useMKEventListener = (
   useEffect(() => {
     const musicKit = window.MusicKit || undefined;
 
-    if (!musicKit || musicKit.errors.length) {
+    if (!musicKit || musicKit.errors) {
       return;
     }
 

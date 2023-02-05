@@ -152,7 +152,7 @@ export const SpotifySDKProvider = ({
 
     if (accessToken) {
       const player = new window.Spotify.Player({
-        name: "iPod Classic",
+        name: "Music.js",
         getOAuthToken: async (cb) => {
           if (!accessToken) {
             console.error(
