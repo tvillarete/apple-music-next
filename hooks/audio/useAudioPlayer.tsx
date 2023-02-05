@@ -30,6 +30,9 @@ interface AudioPlayerState {
   pause: () => Promise<void>;
   seekToTime: (time: number) => void;
   setVolume: (volume: number) => void;
+  skipNext: () => Promise<void>;
+  skipPrevious: () => Promise<void>;
+  togglePlayPause: () => Promise<void>;
   updateNowPlayingItem: () => void;
   updatePlaybackInfo: () => void;
 }
@@ -381,18 +384,6 @@ export const AudioPlayerProvider = ({ children }: Props) => {
     [isAppleAuthorized, isSpotifyAuthorized, music, spotifyPlayer]
   );
 
-  useEventListener<IpodEvent>("playpauseclick", () => {
-    togglePlayPause();
-  });
-
-  useEventListener<IpodEvent>("forwardclick", () => {
-    skipNext();
-  });
-
-  useEventListener<IpodEvent>("backwardclick", () => {
-    skipPrevious();
-  });
-
   // Apple playback event listeners
   useMKEventListener("playbackStateDidChange", handleApplePlaybackStateChange);
   useMKEventListener("queuePositionDidChange", updateNowPlayingItem);
@@ -438,8 +429,11 @@ export const AudioPlayerProvider = ({ children }: Props) => {
         pause,
         seekToTime,
         setVolume: handleChangeVolume,
+        togglePlayPause,
         updateNowPlayingItem,
         updatePlaybackInfo,
+        skipNext,
+        skipPrevious,
       }}
     >
       {children}
