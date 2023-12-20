@@ -15,17 +15,19 @@ const generateRandomString = (length: number): string => {
   return text;
 };
 
-const login = (_: NextApiRequest, res: NextApiResponse) => {
+const login = (req: NextApiRequest, res: NextApiResponse) => {
   const scope =
     "user-read-private user-read-email user-library-read user-follow-read playlist-read-collaborative playlist-read-private streaming user-read-playback-state user-read-currently-playing user-modify-playback-state";
 
-  const spotify_redirect_uri = getSpotifyRedirectUri();
+  const spotify_redirect_uri = getSpotifyRedirectUri(req);
   const spotify_client_id = getSpotifyClientId();
   const state: string = generateRandomString(16);
-  console.log({ spotify_redirect_uri });
 
   if (!spotify_redirect_uri || !spotify_client_id) {
-    res.status(500).json({ error: "Missing Spotify redirect URI" });
+    res.status(500).json({
+      error:
+        "Missing Spotify redirect URI. Check that the Vercel ENV variables have ben properly initialized.",
+    });
     return;
   }
 

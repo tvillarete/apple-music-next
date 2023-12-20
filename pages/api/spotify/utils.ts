@@ -1,4 +1,4 @@
-import type { NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { serialize, CookieSerializeOptions } from "cookie";
 
 export const getSpotifyClientId = () => {
@@ -21,10 +21,13 @@ export const getSpotifyClientSecret = () => {
   }
 };
 
-export const getSpotifyRedirectUri = () => {
-  return process.env.VERCEL_ENV === "development"
-    ? `http://${process.env.VERCEL_URL}/api/spotify/callback`
-    : `https://${process.env.VERCEL_URL}/api/spotify/callback`;
+export const getSpotifyRedirectUri = (req: NextApiRequest) => {
+  const isDev = process.env.NODE_ENV === "development";
+  const protocol = req.headers["x-forwarded-proto"];
+
+  const rootUrl = isDev ? `localhost:3000` : process.env.VERCEL_BASE_URL;
+
+  return `${protocol}://${rootUrl}/music/api/spotify/callback`;
 };
 
 export const getSpotifyAuthorizationHeader = (

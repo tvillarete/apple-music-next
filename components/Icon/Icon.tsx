@@ -44,7 +44,8 @@ const Icon = ({
   className,
   ...iconProps
 }: IconProps) => {
-  const DesiredIcon = useMemo(() => allIcons[name], [name]);
+  // TODO: Fix the typings to work with lazy loading.
+  const DesiredIcon: any = useMemo(() => allIcons[name], [name]);
 
   const dimensions = useMemo(() => getIconDimensionsForSize(size), [size]);
 

@@ -19,7 +19,7 @@ type SpotifyAuthApiResponse = {
 const callback = async (req: NextApiRequest, res: NextApiResponse) => {
   const code = req.query.code;
 
-  const spotify_redirect_uri = getSpotifyRedirectUri();
+  const spotify_redirect_uri = getSpotifyRedirectUri(req);
   const spotify_client_id = getSpotifyClientId();
   const spotify_client_secret = getSpotifyClientSecret();
 
@@ -54,7 +54,7 @@ const callback = async (req: NextApiRequest, res: NextApiResponse) => {
       // Concatenate the two tokens into a single string separated by a comma
       setCookie(res, "spotify-tokens", `${accessToken},${refreshToken}`);
 
-      res.status(200).redirect("/?service=spotify");
+      res.status(200).redirect("/music?service=spotify");
     }
   } catch (error) {
     console.error(`Error: ${error}`);

@@ -19,7 +19,7 @@ export const getRefreshedSpotifyTokens = async (
 
   try {
     const response = await fetch(
-      `/api/spotify/refresh_token?refresh_token=${refreshToken}`,
+      `/music/api/spotify/refresh_token?refresh_token=${refreshToken}`,
       {
         credentials: "same-origin",
         mode: "cors",
@@ -38,7 +38,7 @@ export const getRefreshedSpotifyTokens = async (
 
 export const logOutSpotify = async (): Promise<void> => {
   try {
-    await fetch("/api/spotify/logout");
+    await fetch("/music/api/spotify/logout");
   } catch (error) {
     console.error("Error logging out:", { error });
   }

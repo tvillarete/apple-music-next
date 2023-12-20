@@ -5,6 +5,16 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  basePath: "/music",
+  assetPrefix: "/music",
+  async rewrites() {
+    return [
+      {
+        source: "/:path*",
+        destination: `/:path*`,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

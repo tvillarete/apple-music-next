@@ -62,7 +62,7 @@ export const useSpotifySDK = ({
    */
   const signIn = useCallback(() => {
     if (!isSpotifyAuthorized) {
-      window.open(`/api/spotify/login`, "_self");
+      window.open(`/music/api/spotify/login`, "_self");
     } else if (!state.isPlayerConnected) {
       showView({
         type: "popup",
