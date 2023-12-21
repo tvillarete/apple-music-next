@@ -3,21 +3,21 @@ import NowPlayingArtwork from "components/AudioControls/components/NowPlayingArt
 import Icon from "components/Icon/Icon";
 import { motion } from "framer-motion";
 import { useAudioPlayer } from "hooks";
-import { memo, MouseEventHandler, useState } from "react";
+import { memo, MouseEventHandler } from "react";
 import styled from "styled-components";
 import * as Utils from "utils";
 
 const RootContainer = styled(motion.div)`
   height: 100%;
   display: grid;
-  grid-template-columns: 100px 2fr 1fr;
+  grid-template-columns: 86px 2fr 1fr;
   align-items: center;
   backdrop-filter: blur(50px);
-  padding-left: 16px;
+  padding-left: 12px;
   cursor: pointer;
 `;
 
-const Container = styled(motion.div)`
+const TitleContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,7 +51,6 @@ const MiniPlayer = ({ onClick }: MiniPlayerProps) => {
   const { nowPlayingItem, playbackInfo, togglePlayPause, skipNext } =
     useAudioPlayer();
   const { isPlaying } = playbackInfo;
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const artwork =
     Utils.getArtwork(100, nowPlayingItem?.artwork?.url) ??
@@ -62,9 +61,9 @@ const MiniPlayer = ({ onClick }: MiniPlayerProps) => {
   return (
     <RootContainer layout onClick={onClick}>
       <NowPlayingArtwork size="mini" />
-      <Container layout {...fade}>
+      <TitleContainer layout {...fade}>
         <TitleText>{title}</TitleText>
-      </Container>
+      </TitleContainer>
       <MediaIconContainer
         onClick={(event) => {
           event?.stopPropagation();

@@ -23,6 +23,8 @@ export interface ViewContextHook {
     viewId: ViewOptions["id"],
     options: Partial<Omit<ScreenViewOptionProps, "id">>
   ) => void;
+  toggleAudioControlsDrawer: (value?: boolean) => void;
+  isAudioControlsDrawerOpen: boolean;
 }
 
 /**
@@ -38,6 +40,17 @@ export interface ViewContextHook {
  */
 export const useViewContext = (): ViewContextHook => {
   const [viewContextState, setViewContextState] = useContext(ViewContext);
+
+  const toggleAudioControlsDrawer = useCallback(
+    (value?: boolean) => {
+      setViewContextState((prevState) => ({
+        ...prevState,
+        isAudioControlsDrawerOpen:
+          value ?? !prevState.isAudioControlsDrawerOpen,
+      }));
+    },
+    [setViewContextState]
+  );
 
   const showView = useCallback(
     (view: ViewOptions) => {
@@ -128,6 +141,8 @@ export const useViewContext = (): ViewContextHook => {
     isViewActive: isViewActive,
     viewStack: viewContextState.viewStack,
     setScreenViewOptions,
+    isAudioControlsDrawerOpen: viewContextState.isAudioControlsDrawerOpen,
+    toggleAudioControlsDrawer,
   };
 };
 

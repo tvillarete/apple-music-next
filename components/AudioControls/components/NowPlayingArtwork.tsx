@@ -1,6 +1,6 @@
 import { SCREEN_ANIMATION_DURATION } from "animation";
 import { motion, useAnimationControls } from "framer-motion";
-import { useAudioPlayer } from "hooks";
+import { useAudioPlayer, useViewContext } from "hooks";
 import { memo, useEffect } from "react";
 import styled from "styled-components";
 import * as Utils from "utils";
@@ -17,7 +17,8 @@ const ArtworkImageContainer = styled(motion.div)<{
 
   ::after {
     bottom: 10px;
-    box-shadow: -1px 15px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: ${({ $size }) =>
+      $size === "large" ? "-1px 15px 30px rgba(0, 0, 0, 0.5)" : "none"};
     content: "";
     left: 10px;
     opacity: ${({ $isActive }) => ($isActive ? 1 : 0)};
@@ -32,7 +33,7 @@ const ArtworkImageContainer = styled(motion.div)<{
 const ArtworkImage = styled(motion.img)<{ $size: Size }>`
   height: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
   width: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
-  border-radius: ${({ $size }) => ($size === "large" ? "10px" : "4px")};
+  border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
   pointer-events: none;
 `;
 
@@ -42,6 +43,7 @@ interface NowPlayingArtworkProps {
 
 const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
   const { nowPlayingItem, playbackInfo } = useAudioPlayer();
+  const { isAudioControlsDrawerOpen } = useViewContext();
   const { isPlaying } = playbackInfo;
   const controls = useAnimationControls();
 
@@ -52,8 +54,8 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
   useEffect(() => {
     if (isPlaying) {
       controls.start({
-        scale: 1.2,
-        className: "boxShadow",
+        scale: 1,
+        className: isAudioControlsDrawerOpen ? "boxShadow" : undefined,
         transition: {
           type: "spring",
           duration: 1,
@@ -63,7 +65,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
       });
     } else {
       controls.start({
-        scale: 1,
+        scale: isAudioControlsDrawerOpen ? 0.7 : 1,
         transition: {
           type: "spring",
           duration: 0.7,
@@ -72,7 +74,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
         },
       });
     }
-  }, [controls, isPlaying]);
+  }, [controls, isAudioControlsDrawerOpen, isPlaying]);
 
   const layoutTransition = {
     type: "spring",

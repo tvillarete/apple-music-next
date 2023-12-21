@@ -4,9 +4,9 @@ import MiniPlayer from "components/AudioControls/components/MiniPlayer";
 import NowPlayingArtwork from "components/AudioControls/components/NowPlayingArtwork";
 import TrackScrubber from "components/AudioControls/components/TrackScrubber";
 import { AnimatePresence, motion, PanInfo } from "framer-motion";
-import { useAudioPlayer } from "hooks";
-import { memo, useCallback, useMemo, useState } from "react";
-import styled from "styled-components";
+import { useAudioPlayer, useViewContext } from "hooks";
+import { memo, useCallback, useMemo } from "react";
+import styled, { css } from "styled-components";
 import * as Utils from "utils";
 
 const RootContainer = styled(motion.div)<{
@@ -21,6 +21,16 @@ const RootContainer = styled(motion.div)<{
   height: ${({ $isExpanded: isOpen }) => (isOpen ? "100vh" : "100px")};
   border: 0.5px solid #acacac11;
   background-color: white;
+
+  ${({ $isExpanded }) =>
+    !$isExpanded &&
+    css`
+      margin: 12px 16px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      overflow: hidden;
+      height: 86px;
+    `}
 `;
 
 const ContentContainer = styled(motion.div)<{ $isExpanded: boolean }>`
@@ -57,7 +67,8 @@ const SubtitleText = styled(TitleText)`
 
 const AudioControls = () => {
   const { nowPlayingItem, togglePlayPause } = useAudioPlayer();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isAudioControlsDrawerOpen, toggleAudioControlsDrawer } =
+    useViewContext();
 
   const artwork =
     Utils.getArtwork(100, nowPlayingItem?.artwork?.url) ??
@@ -75,32 +86,24 @@ const AudioControls = () => {
     []
   );
 
-  const handleToggleExpandedState = useCallback(() => {
-    setIsExpanded((prevState) => !prevState);
-  }, []);
-
   const handleDrag = useCallback(
     (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-      setIsExpanded((prevState) => {
-        const isDraggedDown = info.offset.y > 100;
-        const isDraggedUp = info.offset.y < 0;
+      const isDraggedDown = info.offset.y > 100;
+      const isDraggedUp = info.offset.y < 0;
 
-        if (isDraggedUp && !prevState) {
-          return true;
-        } else if (isDraggedDown && prevState) {
-          return false;
-        }
-
-        return prevState;
-      });
+      if (isDraggedUp && !isAudioControlsDrawerOpen) {
+        toggleAudioControlsDrawer(true);
+      } else if (isDraggedDown && isAudioControlsDrawerOpen) {
+        toggleAudioControlsDrawer(false);
+      }
     },
-    []
+    [isAudioControlsDrawerOpen, toggleAudioControlsDrawer]
   );
 
   return (
     <RootContainer
       $artworkUrl={artwork}
-      $isExpanded={isExpanded}
+      $isExpanded={isAudioControlsDrawerOpen}
       drag="y"
       dragConstraints={{ top: 0, bottom: 0 }}
       dragElastic={0.1}
@@ -109,9 +112,9 @@ const AudioControls = () => {
       transition={layoutTransition}
     >
       <AnimatePresence>
-        {isExpanded ? (
-          <ContentContainer layout $isExpanded={isExpanded}>
-            <DragHandle onClick={handleToggleExpandedState} />
+        {isAudioControlsDrawerOpen ? (
+          <ContentContainer layout $isExpanded>
+            <DragHandle onClick={() => toggleAudioControlsDrawer()} />
             <ArtworkContainer>
               <NowPlayingArtwork size="large" />
             </ArtworkContainer>
@@ -124,7 +127,7 @@ const AudioControls = () => {
             </MetadataContainer>
           </ContentContainer>
         ) : (
-          <MiniPlayer onClick={handleToggleExpandedState} />
+          <MiniPlayer onClick={() => toggleAudioControlsDrawer()} />
         )}
       </AnimatePresence>
     </RootContainer>

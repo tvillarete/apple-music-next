@@ -60,6 +60,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   const [volume, setVolume] = useState(0.5);
   const [nowPlayingItem, setNowPlayingItem] = useState<MediaApi.MediaItem>();
   const [playbackInfo, setPlaybackInfo] = useState(defaultPlatbackInfoState);
+  const { toggleAudioControlsDrawer } = useViewContext();
 
   const playAppleMusic = useCallback(
     async (queueOptions: MediaApi.QueueOptions) => {
@@ -141,14 +142,15 @@ export const AudioPlayerProvider = ({ children }: Props) => {
     async (queueOptions: MediaApi.QueueOptions) => {
       switch (service) {
         case "apple":
-          return playAppleMusic(queueOptions);
+          playAppleMusic(queueOptions);
         case "spotify":
-          return playSpotify(queueOptions);
+          playSpotify(queueOptions);
         default:
-          throw new Error("Unable to play: service not specified");
+          console.error("Unable to play: service not specified");
       }
+      toggleAudioControlsDrawer(true);
     },
-    [playAppleMusic, playSpotify, service]
+    [playAppleMusic, playSpotify, service, toggleAudioControlsDrawer]
   );
 
   const pause = useCallback(async () => {

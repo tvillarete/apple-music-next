@@ -16,12 +16,7 @@ interface Props {
 
 const AlbumsView = ({ albums, inLibrary = true }: Props) => {
   const { isAuthorized } = useSettings();
-  const {
-    data: fetchedAlbums,
-    isLoading,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useFetchAlbums({
+  const { data: fetchedAlbums, isLoading } = useFetchAlbums({
     // Don't fetch if we're passed an initial array of albums
     lazy: !!albums,
   });

@@ -1,6 +1,7 @@
 import { Scrubber } from "components/Scrubber";
-import { useAudioPlayer, useInterval } from "hooks";
-import { memo, useCallback, useEffect, useState } from "react";
+import { format, set } from "date-fns";
+import { useAudioPlayer, useEffectOnce, useInterval } from "hooks";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 const RootContainer = styled.div``;
@@ -10,11 +11,13 @@ const getTrackPercent = (currentTime: number, duration: number) => {
 };
 
 const TrackScrubber = () => {
-  const { playbackInfo, updatePlaybackInfo, seekToTime } = useAudioPlayer();
+  const { nowPlayingItem, playbackInfo, updatePlaybackInfo, seekToTime } =
+    useAudioPlayer();
   const { isPlaying, isPaused, currentTime, duration } = playbackInfo;
   const [percent, setPercent] = useState(
     getTrackPercent(currentTime, duration)
   );
+  const hasNowPlayingItem = !!nowPlayingItem;
 
   const handleProgressChange = useCallback(
     (updatedPercent: number) => {
@@ -32,16 +35,43 @@ const TrackScrubber = () => {
     setPercent(getTrackPercent(currentTime, duration));
   }, [currentTime, duration]);
 
+  // Make sure the playback info is updated when the component mounts.
+  useEffectOnce(() => {
+    updatePlaybackInfo();
+  });
+
   /** Update the progress bar every second. */
   useInterval(updatePlaybackInfo, 1000, shouldSkipInterval);
+
+  const leftLabel = useMemo(
+    () =>
+      hasNowPlayingItem
+        ? format(
+            set(new Date(), { hours: 0, minutes: 0, seconds: currentTime }),
+            "mm:ss"
+          )
+        : "--:--",
+    [currentTime, hasNowPlayingItem]
+  );
+
+  const rightLabel = useMemo(
+    () =>
+      hasNowPlayingItem
+        ? format(
+            set(new Date(), { hours: 0, minutes: 0, seconds: duration }),
+            "mm:ss"
+          )
+        : "--:--",
+    [duration, hasNowPlayingItem]
+  );
 
   return (
     <RootContainer>
       <Scrubber
         percent={percent}
         onChange={handleProgressChange}
-        leftLabel="--:--"
-        rightLabel="--:--"
+        leftLabel={leftLabel}
+        rightLabel={rightLabel}
       />
     </RootContainer>
   );

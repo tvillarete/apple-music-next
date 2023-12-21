@@ -51,6 +51,7 @@ export type ViewOptions<TComponent extends React.ComponentType<any> = any> =
 interface ViewContextState {
   viewStack: ViewOptions[];
   headerTitle?: string;
+  isAudioControlsDrawerOpen: boolean;
 }
 
 type ViewContextStateType = [
@@ -62,6 +63,7 @@ export const ViewContext = createContext<ViewContextStateType>([
   {
     viewStack: [],
     headerTitle: "Library",
+    isAudioControlsDrawerOpen: false,
   },
   () => {},
 ]);
@@ -81,6 +83,7 @@ const ViewContextProvider = ({ children }: Props) => {
   const [viewContextState, setViewContextState] = useState<ViewContextState>({
     viewStack,
     headerTitle: views.library.title,
+    isAudioControlsDrawerOpen: false,
   });
 
   return (

@@ -75,14 +75,9 @@ const ContentContainer = styled.div<{ $variant: ListItemVariant }>`
 `;
 
 const LeftContentContainer = styled.div<{ $variant: ListItemVariant }>`
-  ${({ $variant }) =>
-    $variant === "list"
-      ? css`
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        `
-      : null};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const RightContentContainer = styled.div`
