@@ -6,9 +6,8 @@ import {
   useState,
 } from "react";
 
-import { useEventListener, useMKEventListener, useViewContext } from "hooks";
+import { useMKEventListener, useViewContext } from "hooks";
 import * as ConversionUtils from "utils/conversion";
-import { IpodEvent } from "utils/events";
 
 import { useMusicKit, useSettings, useSpotifySDK, VOLUME_KEY } from "..";
 
@@ -177,7 +176,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
         }
         break;
       case "spotify":
-        spotifyPlayer.togglePlay();
+        spotifyPlayer.togglePlay?.();
         break;
       default:
         throw new Error("Unable to play: service not specified");
