@@ -101,6 +101,7 @@ export type SelectableListOption = SharedOptionProps &
 
 const RootContainer = styled.div<{ $variant: "list" | "grid" }>`
   width: 100%;
+  padding-bottom: 100px;
 
   ${({ $variant }) =>
     $variant === "grid"

@@ -41,7 +41,7 @@ const ContentContainer = styled(motion.div)<{ $isExpanded: boolean }>`
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
 `;
 
 const ArtworkContainer = styled.div`

@@ -2,18 +2,32 @@ import { SCREEN_ANIMATION_DURATION } from "animation";
 import { motion, useAnimationControls } from "framer-motion";
 import { useAudioPlayer, useViewContext } from "hooks";
 import { memo, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import * as Utils from "utils";
 
-type Size = "mini" | "large";
+type ArtworkSize = "mini" | "large";
 
-const ArtworkImageContainer = styled(motion.div)<{
+const ARTWORK_PX_LARGE = css`
+  height: minMax(80vw, 500px);
+  width: clamp(80vw, 500px);
+`;
+const ARTWORK_PX_MINI = css`
+  height: 60px;
+  width: 60px;
+`;
+
+const getArtworkPxFromSize = (size: ArtworkSize) => css`
+  height: min(400px, ${size === "large" ? "90vw" : "60px"});
+  width: min(400px, ${size === "large" ? "90vw" : "60px"});
+`;
+
+const RootContainer = styled(motion.div)<{
   $isActive: boolean;
-  $size: Size;
+  $size: ArtworkSize;
 }>`
   position: relative;
-  height: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
-  width: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
+  height: ${({ $size }) => getArtworkPxFromSize($size)};
+  width: ${({ $size }) => getArtworkPxFromSize($size)};
 
   ::after {
     bottom: 10px;
@@ -30,15 +44,15 @@ const ArtworkImageContainer = styled(motion.div)<{
   }
 `;
 
-const ArtworkImage = styled(motion.img)<{ $size: Size }>`
-  height: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
-  width: ${({ $size }) => ($size === "large" ? "40vh" : "60px")};
+const ArtworkImage = styled(motion.img)<{ $size: ArtworkSize }>`
+  height: ${({ $size }) => getArtworkPxFromSize($size)};
+  width: ${({ $size }) => getArtworkPxFromSize($size)};
   border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
   pointer-events: none;
 `;
 
 interface NowPlayingArtworkProps {
-  size: Size;
+  size: ArtworkSize;
 }
 
 const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
@@ -83,7 +97,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
   };
 
   return (
-    <ArtworkImageContainer
+    <RootContainer
       layoutId="ac-now-playing-image-container"
       $isActive={isPlaying}
       animate={controls}
@@ -96,7 +110,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
         src={artwork}
         transition={layoutTransition}
       />
-    </ArtworkImageContainer>
+    </RootContainer>
   );
 };
 
