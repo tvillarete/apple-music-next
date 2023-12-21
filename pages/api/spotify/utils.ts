@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { serialize, CookieSerializeOptions } from "cookie";
+import { API_URL } from "utils/constants/api";
 
 export const getSpotifyClientId = () => {
   if (process.env.SPOTIFY_CLIENT_ID) {
@@ -27,7 +28,8 @@ export const getSpotifyRedirectUri = (req: NextApiRequest) => {
 
   const rootUrl = isDev ? `localhost:3000` : process.env.VERCEL_BASE_URL;
 
-  return `${protocol}://${rootUrl}/music/api/spotify/callback`;
+  // Example: https://localhost:3000/api/spotify/callback
+  return `${protocol}://${rootUrl}${API_URL}/spotify/callback`;
 };
 
 export const getSpotifyAuthorizationHeader = (

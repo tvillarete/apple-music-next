@@ -13,8 +13,7 @@ import * as SpotifyUtils from "utils/spotify";
 
 import { useSettings } from "..";
 import { views } from "components/views";
-
-export const API_URL = "https://308c-174-127-165-218.ngrok.io";
+import { API_URL } from "utils/constants/api";
 
 export interface SpotifySDKState {
   isPlayerConnected: boolean;
@@ -62,7 +61,7 @@ export const useSpotifySDK = ({
    */
   const signIn = useCallback(() => {
     if (!isSpotifyAuthorized) {
-      window.open(`/music/api/spotify/login`, "_self");
+      window.open(`${API_URL}/spotify/login`, "_self");
     } else if (!state.isPlayerConnected) {
       showView({
         type: "popup",
