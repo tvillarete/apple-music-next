@@ -11,7 +11,7 @@ const sizeToDimensions: Record<IconSize, number> = {
   xxlarge: 48,
 } as const;
 
-type IconSize =
+export type IconSize =
   | "xxsmall"
   | "xsmall"
   | "small"

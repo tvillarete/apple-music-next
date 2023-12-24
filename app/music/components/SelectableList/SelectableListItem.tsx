@@ -7,6 +7,8 @@ import { SelectableListOption } from ".";
 
 type ListItemVariant = "list" | "grid";
 
+const BACKGROUND_COLOR = "rgb(199, 199, 204)";
+
 const RootButtonContainer = styled.button<{
   $hasImage: boolean;
   $variant: ListItemVariant;
@@ -25,8 +27,9 @@ const RootButtonContainer = styled.button<{
   cursor: pointer;
   user-select: none;
 
-  :active {
-    background-color: rgba(0, 0, 0, 0.07);
+  &:active {
+    background-color: ${({ $variant }) =>
+      $variant === "list" ? BACKGROUND_COLOR : null};
   }
 
   ${({ $variant }) =>
@@ -61,7 +64,7 @@ const ContentContainer = styled.div<{ $variant: ListItemVariant }>`
   align-items: center;
   grid-template-columns: 1fr 0.2fr;
   height: 100%;
-  border-bottom: 0.5px solid rgba(60, 60, 67, 0.36);
+  border-bottom: 0.5px solid ${BACKGROUND_COLOR};
   text-align: left;
 
   ${({ $variant }) =>

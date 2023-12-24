@@ -5,9 +5,9 @@ import {
   SPOTIFY_CLIENT_SECRET,
   SPOTIFY_TOKENS_COOKIE_NAME,
 } from "music/utils/constants/api";
-import { NextApiRequest } from "next";
+import { NextRequest } from "next/server";
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url ?? "");
   const urlSearchParams = new URLSearchParams(url.search);
   const refreshToken = urlSearchParams.get("refresh_token");
@@ -44,9 +44,14 @@ export async function GET(req: NextApiRequest) {
     if (accessToken) {
       setCookie(SPOTIFY_TOKENS_COOKIE_NAME, accessToken);
 
-      return new Response(JSON.stringify(response), {
-        status: 200,
-      });
+      return new Response(
+        JSON.stringify({
+          accessToken,
+        }),
+        {
+          status: 200,
+        }
+      );
     }
 
     return new Response(`Unable to refresh access token`, {

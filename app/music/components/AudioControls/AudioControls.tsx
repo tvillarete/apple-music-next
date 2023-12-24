@@ -1,80 +1,50 @@
 import { SCREEN_ANIMATION_DURATION } from "music/animation";
 import DragHandle from "music/components/AudioControls/components/DragHandle";
-import MiniPlayer from "music/components/AudioControls/components/MiniPlayer";
 import NowPlayingArtwork from "music/components/AudioControls/components/NowPlayingArtwork";
-import TrackScrubber from "music/components/AudioControls/components/TrackScrubber";
-import { AnimatePresence, motion, PanInfo } from "framer-motion";
-import { useAudioPlayer, useViewContext } from "music/hooks";
+import { motion, PanInfo } from "framer-motion";
+import { useViewContext } from "music/hooks";
 import { memo, useCallback, useMemo } from "react";
 import styled, { css } from "styled-components";
-import * as Utils from "music/utils";
+import MiniPlayerControls from "music/components/AudioControls/components/MiniPlayerControls";
+import ExpandedPlayerControls from "music/components/AudioControls/components/ExpandedPlayerControls";
+
+const MINI_PLAYER_HEIGHT = "64px";
 
 const RootContainer = styled(motion.div)<{
   $isExpanded: boolean;
 }>`
-  z-index: 10;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: ${({ $isExpanded: isOpen }) => (isOpen ? "100vh" : "100px")};
-  border: 0.5px solid #acacac11;
+  align-items: start;
   background-color: white;
+  border: 0.5px solid #acacac11;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: 48px 1fr 1.1fr;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 10;
 
   ${({ $isExpanded }) =>
     !$isExpanded &&
     css`
-      margin: 12px 16px;
-      background-color: rgba(255, 255, 255, 0.8);
+      align-items: center;
+      backdrop-filter: blur(50px);
+      background-color: rgba(255, 255, 255, 0.3);
       border-radius: 16px;
-      overflow: hidden;
-      height: 86px;
+      box-shadow: 0px 10px 100px rgba(0, 0, 0, 0.5);
+      grid-template-columns: 64px 1fr;
+      grid-template-rows: unset;
+      height: ${MINI_PLAYER_HEIGHT};
+      margin: 12px 16px;
+      padding: 0 8px;
     `}
 `;
 
-const ContentContainer = styled(motion.div)<{ $isExpanded: boolean }>`
-  position: relative;
-  display: grid;
-  grid-template-rows: 40px 1.25fr 1fr;
-  height: 100%;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 0 24px;
-`;
-
-const ArtworkContainer = styled.div`
-  display: grid;
-  place-items: center;
-  margin-bottom: 24px;
-`;
-
-const TrackInfoContainer = styled.div`
-  min-height: 64px;
-`;
-
-const MetadataContainer = styled.div``;
-
-const TitleText = styled.h3`
-  font-size: 18px;
-  font-weight: normal;
-`;
-
-const SubtitleText = styled(TitleText)`
-  font-size: 16px;
-`;
-
 const AudioControls = () => {
-  const { nowPlayingItem, togglePlayPause } = useAudioPlayer();
   const { isAudioControlsDrawerOpen, toggleAudioControlsDrawer } =
     useViewContext();
-
-  const artwork =
-    Utils.getArtwork(100, nowPlayingItem?.artwork?.url) ??
-    "https://i.scdn.co/image/ab67616d00001e023b697b59e73fa10cb4871ea2";
-
-  const title = nowPlayingItem?.name ?? "Not playing";
-  const subtitle = nowPlayingItem?.artistName;
 
   const layoutTransition = useMemo(
     () => ({
@@ -104,30 +74,20 @@ const AudioControls = () => {
       $isExpanded={isAudioControlsDrawerOpen}
       drag="y"
       dragConstraints={{ top: 0, bottom: 0 }}
-      dragElastic={0.1}
+      dragElastic={isAudioControlsDrawerOpen ? 0.5 : 0.1}
       layout
       onDragEnd={handleDrag}
       transition={layoutTransition}
     >
-      <AnimatePresence>
-        {isAudioControlsDrawerOpen ? (
-          <ContentContainer layout $isExpanded>
-            <DragHandle onClick={() => toggleAudioControlsDrawer()} />
-            <ArtworkContainer>
-              <NowPlayingArtwork size="large" />
-            </ArtworkContainer>
-            <MetadataContainer>
-              <TrackInfoContainer>
-                <TitleText onClick={togglePlayPause}>{title}</TitleText>
-                {!!subtitle && <TitleText>{subtitle}</TitleText>}
-              </TrackInfoContainer>
-              <TrackScrubber />
-            </MetadataContainer>
-          </ContentContainer>
-        ) : (
-          <MiniPlayer onClick={() => toggleAudioControlsDrawer()} />
-        )}
-      </AnimatePresence>
+      {isAudioControlsDrawerOpen ? (
+        <DragHandle onClick={() => toggleAudioControlsDrawer()} />
+      ) : null}
+      <NowPlayingArtwork size={isAudioControlsDrawerOpen ? "large" : "mini"} />
+      {isAudioControlsDrawerOpen ? (
+        <ExpandedPlayerControls />
+      ) : (
+        <MiniPlayerControls />
+      )}
     </RootContainer>
   );
 };

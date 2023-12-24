@@ -2,6 +2,7 @@ import { memo } from "react";
 import styled from "styled-components";
 
 const RootContainer = styled.div`
+  align-self: center;
   display: grid;
   place-items: center;
   width: 100%;

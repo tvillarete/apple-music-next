@@ -8,7 +8,7 @@ export default async function Page() {
   const appleAccessToken = process.env.APPLE_DEVELOPER_TOKEN ?? "";
 
   const spotifyTokens = nextCookies.get(SPOTIFY_TOKENS_COOKIE_NAME)?.value;
-  const [spotifyAccessToken = "", spotifyRefreshToken = ""] =
+  const [spotifyAccessToken, spotifyRefreshToken] =
     spotifyTokens?.split(",") ?? [];
 
   return (

@@ -7,48 +7,42 @@ import * as Utils from "music/utils";
 
 type ArtworkSize = "mini" | "large";
 
-const ARTWORK_PX_LARGE = css`
-  height: minMax(80vw, 500px);
-  width: clamp(80vw, 500px);
-`;
-const ARTWORK_PX_MINI = css`
-  height: 60px;
-  width: 60px;
+const getArtworkPxFromSize = (size: ArtworkSize) => css`
+  height: ${size === "large" ? "90vw" : "48px"};
+  width: ${size === "large" ? "90vw" : "48px"};
+  max-width: 400px;
+  max-height: 400px;
 `;
 
-const getArtworkPxFromSize = (size: ArtworkSize) => css`
-  height: min(400px, ${size === "large" ? "90vw" : "60px"});
-  width: min(400px, ${size === "large" ? "90vw" : "60px"});
-`;
+const getDropShadow = (size: ArtworkSize, isActive: boolean) => {
+  if (size === "large") {
+    return isActive
+      ? "drop-shadow(-1px 15px 30px rgba(0, 0, 0, 0.5))"
+      : "drop-shadow(-1px 15px 20px rgba(0, 0, 0, 0.3))";
+  }
+
+  return null;
+};
 
 const RootContainer = styled(motion.div)<{
   $isActive: boolean;
   $size: ArtworkSize;
 }>`
   position: relative;
-  height: ${({ $size }) => getArtworkPxFromSize($size)};
-  width: ${({ $size }) => getArtworkPxFromSize($size)};
-
-  ::after {
-    bottom: 10px;
-    box-shadow: ${({ $size }) =>
-      $size === "large" ? "-1px 15px 30px rgba(0, 0, 0, 0.5)" : "none"};
-    content: "";
-    left: 10px;
-    opacity: ${({ $isActive }) => ($isActive ? 1 : 0)};
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    transition: opacity 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
-    z-index: -1;
-  }
+  ${({ $size }) => getArtworkPxFromSize($size)};
+  border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
 `;
 
-const ArtworkImage = styled(motion.img)<{ $size: ArtworkSize }>`
-  height: ${({ $size }) => getArtworkPxFromSize($size)};
-  width: ${({ $size }) => getArtworkPxFromSize($size)};
+const ArtworkImage = styled(motion.img)<{
+  $size: ArtworkSize;
+  $isActive: boolean;
+}>`
+  height: 100%;
+  width: 100%;
   border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
   pointer-events: none;
+  filter: ${({ $isActive, $size }) => getDropShadow($size, $isActive)};
+  transition: filter 0.1s ease-in-out;
 `;
 
 interface NowPlayingArtworkProps {
@@ -62,7 +56,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
   const controls = useAnimationControls();
 
   const artwork =
-    Utils.getArtwork(100, nowPlayingItem?.artwork?.url) ??
+    Utils.getArtwork(400, nowPlayingItem?.artwork?.url) ??
     "/default_album_artwork.png";
 
   useEffect(() => {
@@ -98,7 +92,6 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
 
   return (
     <RootContainer
-      layoutId="ac-now-playing-image-container"
       $isActive={isPlaying}
       animate={controls}
       $size={size}
@@ -106,6 +99,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
     >
       <ArtworkImage
         $size={size}
+        $isActive={isPlaying}
         layoutId="ac-now-laying-image"
         src={artwork}
         transition={layoutTransition}

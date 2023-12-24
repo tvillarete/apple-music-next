@@ -1,4 +1,3 @@
-import type { NextApiRequest } from "next";
 import axios from "axios";
 
 import {
@@ -7,6 +6,7 @@ import {
   SPOTIFY_TOKENS_COOKIE_NAME,
 } from "music/utils/constants/api";
 import { getSpotifyRedirectUri, setCookie } from "music/api/spotify/utils";
+import { NextRequest } from "next/server";
 
 type SpotifyAuthApiResponse = {
   access_token: string;
@@ -16,7 +16,7 @@ type SpotifyAuthApiResponse = {
   refresh_token: string;
 };
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url ?? "");
   const urlSearchParams = new URLSearchParams(url.search);
   const code = urlSearchParams.get("code");
