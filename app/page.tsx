@@ -1,5 +1,21 @@
-import { redirect } from "next/navigation";
+import { AppleMusicApp } from "components/AppleMusicApp";
+import { SPOTIFY_TOKENS_COOKIE_NAME } from "utils/constants/api";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-  redirect("/music");
+  const nextCookies = cookies();
+
+  const appleAccessToken = process.env.APPLE_DEVELOPER_TOKEN ?? "";
+
+  const spotifyTokens = nextCookies.get(SPOTIFY_TOKENS_COOKIE_NAME)?.value;
+  const [spotifyAccessToken, spotifyRefreshToken] =
+    spotifyTokens?.split(",") ?? [];
+
+  return (
+    <AppleMusicApp
+      appleAccessToken={appleAccessToken}
+      spotifyAccessToken={spotifyAccessToken}
+      spotifyRefreshToken={spotifyRefreshToken}
+    />
+  );
 }
