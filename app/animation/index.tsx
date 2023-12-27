@@ -68,18 +68,17 @@ export const slideUpAnimation = {
   exit: "closing",
 };
 
-export const popInAnimation = {
+export const popupAnimation = {
   variants: {
-    closed: { scale: 0.6, opacity: 0 },
+    closed: { scale: 1.2, opacity: 0 },
     open: {
       scale: 1,
       opacity: 1,
-      transition: { duration: SCREEN_ANIMATION_DURATION, type: "spring" },
+      transition: { duration: 0.2, type: "tween" },
     },
     closing: {
-      scale: 0.6,
       opacity: 0,
-      transition: { duration: SCREEN_ANIMATION_DURATION, type: "spring" },
+      transition: { duration: 0.1, type: "tween" },
     },
   },
   initial: "closed",

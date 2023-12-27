@@ -19,7 +19,7 @@ const Play = React.memo(
             width="6.72"
             height="24"
             rx="2"
-            fill="black"
+            fill="currentColor"
           />
           <rect
             id="Rectangle_2"
@@ -27,7 +27,7 @@ const Play = React.memo(
             width="6.72"
             height="24"
             rx="2"
-            fill="black"
+            fill="currentColor"
           />
         </g>
       </svg>

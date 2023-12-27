@@ -4,30 +4,98 @@ import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
 import { ArtistsView } from "components/views/ArtistsView";
-import { useSpotifySDK, useViewContext } from "hooks";
+import { useSettings, useSpotifySDK, useViewContext } from "hooks";
 import styled from "styled-components";
 import { AlbumsView } from "components/views/AlbumsView";
 import { PlaylistsView } from "components/views/PlaylistsView";
+import { useMusicKit } from "hooks/musicKit/useMusicKit";
 
 const RootContainer = styled.div``;
 
 const LibraryView = () => {
-  const { setScreenViewOptions } = useViewContext();
+  const { colorScheme, setColorScheme } = useSettings();
+  const { setScreenViewOptions, showView } = useViewContext();
   const { signIn: signInWithSpotify, signOut: signOutSpotify } =
     useSpotifySDK();
+  const { signIn: signInWithApple, signOut: signOutApple } = useMusicKit();
+
+  const handleSignInClick = useCallback(() => {
+    showView({
+      type: "popup",
+      id: "signinPopup",
+      title: "Sign in",
+      description: "Choose a service",
+      listOptions: [
+        {
+          type: "action",
+          label: "Spotify",
+          onSelect: signInWithSpotify,
+        },
+        {
+          type: "action",
+          label: "Apple Music",
+          onSelect: signInWithApple,
+        },
+        {
+          type: "action",
+          label: "Cancel",
+          onSelect: () => {},
+        },
+      ],
+    });
+  }, [showView, signInWithApple, signInWithSpotify]);
+
+  const handleSignOutClick = useCallback(() => {
+    showView({
+      type: "popup",
+      id: "signOutPopup",
+      title: "Sign out",
+      description: "Choose a service to sign out of",
+      listOptions: [
+        {
+          type: "action",
+          label: "Spotify",
+          onSelect: signOutSpotify,
+        },
+        {
+          type: "action",
+          label: "Apple Music",
+          onSelect: signOutApple,
+        },
+        {
+          type: "action",
+          label: "Cancel",
+          onSelect: () => {},
+        },
+      ],
+    });
+  }, [showView, signOutApple, signOutSpotify]);
+
+  const handleChangeColorScheme = useCallback(() => {
+    setColorScheme();
+  }, [setColorScheme]);
 
   const handleAuthorizationChanged = useCallback(
     (value: boolean) => {
       setScreenViewOptions("library", {
         headerRightActions: [
           {
-            onClick: value ? signOutSpotify : signInWithSpotify,
+            onClick: handleChangeColorScheme,
+            title: "Theme",
+          },
+          {
+            onClick: value ? handleSignOutClick : handleSignInClick,
             title: value ? "Sign out" : "Sign in",
           },
         ],
       });
     },
-    [setScreenViewOptions, signInWithSpotify, signOutSpotify]
+    [
+      handleChangeColorScheme,
+      handleSignInClick,
+      handleSignOutClick,
+      setScreenViewOptions,
+    ]
   );
 
   useSpotifySDK({

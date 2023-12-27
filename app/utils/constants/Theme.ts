@@ -1,133 +1,92 @@
-export type DeviceTheme = {
-  body: {
-    background: string;
-    sticker1?: {
-      background: string;
-      styles?: Record<string, string | number>;
-    };
-    sticker2?: {
-      background: string;
-      styles?: Record<string, string | number>;
-    };
-    sticker3?: {
-      background: string;
-      styles?: Record<string, string | number>;
-    };
-  };
-  knob: {
-    background: string;
-    outline: string;
-    button: string;
-    centerButton: {
-      background: string;
-      boxShadow: string;
-      outline: string;
-    };
-  };
-};
-
-const Silver: DeviceTheme = {
-  body: {
-    background: 'linear-gradient(180deg, #e3e3e3 0%, #d6d6d6 100%)',
+const defaultColorTheme = {
+  red: "#FF3B30",
+  orange: "#FF9500",
+  yellow: "#FFCC00",
+  green: "#34C759",
+  mint: "#00C7BE",
+  teal: "#30B0C7",
+  cyan: "#32ADE6",
+  blue: "#007AFF",
+  indigo: "#5856D6",
+  purple: "#AF52DE",
+  pink: "#FF2D55",
+  brown: "#A2845E",
+  black: "#000000",
+  grey: "#8E8E93",
+  grey2: "#AEAEB2",
+  grey3: "#C7C7CC",
+  grey4: "#D1D1D6",
+  grey5: "#E5E5EA",
+  grey6: "#F2F2F7",
+  white: "#FFFFFF",
+  background: {
+    primary: "#FFFFFF",
+    secondary: "#F2F2F7",
+    tertiary: "#FFFFFF",
   },
-  knob: {
-    background: '#FFFFFF',
-    outline: '#b9b9b9',
-    button: '#AFAFAF',
-    centerButton: {
-      background: '#ffffff',
-      boxShadow: 'rgb(191, 191, 191)',
-      outline: '#b9b9b9',
-    },
+  content: {
+    primary: " rgba(0, 0, 0, 1)",
+    secondary: "rgba(60, 60, 67, 0.6)",
+    tertiary: "rgba(60, 60, 67, 0.3)",
+    quaternary: "rgba(60, 60, 67, 0.1)",
+  },
+  border: {
+    opaque: "#C6C6C8",
+    nonOpaque: "#3C3C4336",
   },
 };
 
-const Black: DeviceTheme = {
-  body: {
-    background: 'linear-gradient(180deg, #7d7c7d 0%, #1e1e1e 100%)',
+type ColorTheme = typeof defaultColorTheme;
+
+const darkColorTheme: ColorTheme = {
+  red: "#FF453A",
+  orange: "#FF9F0A",
+  yellow: "#FFD60A",
+  green: "#30D158",
+  mint: "#63E6E2",
+  teal: "#40CBE0",
+  cyan: "#64D2FF",
+  blue: "#0A84FF",
+  indigo: "#5E5CE6",
+  purple: "#BF5AF2",
+  pink: "#FF375F",
+  brown: "#AC8E68",
+  black: "#000000",
+  grey: "#8E8E93",
+  grey2: "#636366",
+  grey3: "#48484A",
+  grey4: "#3A3A3C",
+  grey5: "#2C2C2E",
+  grey6: "#1C1C1E",
+  white: "#FFFFFF",
+  background: {
+    primary: "#000000",
+    secondary: "#1C1C1E",
+    tertiary: "#2C2C2E",
   },
-  knob: {
-    background: '#2a2a2a',
-    outline: '#1a1a1a',
-    button: '#FFFFFF',
-    centerButton: {
-      background: '#7d7c7d',
-      boxShadow: 'rgb(50, 50, 50)',
-      outline: '#1a1a1a',
-    },
+  content: {
+    primary: "rgba(255, 255, 255, 1)",
+    secondary: "rgba(235, 235, 245, 0.6)",
+    tertiary: "rgba(235, 235, 245, 0.3)",
+    quaternary: "rgba(235, 235, 245, 0.1)",
+  },
+  border: {
+    opaque: "#38383A",
+    nonOpaque: "#3C3C4336",
   },
 };
 
-const U2: DeviceTheme = {
-  body: {
-    background: 'linear-gradient(180deg, #7d7c7d 0%, #1e1e1e 100%)',
-  },
-  knob: {
-    background: '#de2029',
-    outline: '#1a1a1a',
-    button: '#ffffff',
-    centerButton: {
-      background: '#5d5c5d',
-      boxShadow: 'rgb(50, 50, 50)',
-      outline: '#1a1a1a',
-    },
-  },
+const colorThemes = {
+  default: defaultColorTheme,
+  dark: darkColorTheme,
 };
 
-// This theme was created in collaboration with Parlophone Records
-// for the artist Mnelia.
-const Mnelia: DeviceTheme = {
-  body: {
-    background:
-      'linear-gradient(193.42deg, #8676d6 49.48%, rgba(238, 65, 122, 0.74) 100%);',
-    sticker1: {
-      background: 'url(palm.svg) no-repeat bottom left',
-      styles: {
-        bottom: 0,
-        left: 0,
-        height: '40%',
-        width: '50%',
-        marginLeft: '-10%',
-        marginBottom: '-10%',
-        mixBlendMode: 'multiply',
-      },
-    },
-    sticker2: {
-      background: 'url(palm.svg) no-repeat',
-      styles: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        height: '40%',
-        width: '50%',
-        marginRight: '-10%',
-        marginBottom: '-35%',
-        mixBlendMode: 'multiply',
-      },
-    },
-    sticker3: {
-      background: 'url("mnelia_signature.png") no-repeat',
-      styles: {
-        position: 'absolute',
-        bottom: '42%',
-        width: '60px',
-        height: '40px',
-        backgroundSize: 'contain',
-        right: 15,
-        opacity: '50%',
-      },
-    },
-  },
-  knob: {
-    background: '#2a2a2acf',
-    outline: '#62315e',
-    button: '#ffffff',
-    centerButton: {
-      background: '#c69edb',
-      boxShadow: 'rgb(142 54 101)',
-      outline: '#62315e',
-    },
-  },
+export type ColorScheme = "default" | "dark";
+
+export type ThemeConstants = {
+  colors: ColorTheme;
 };
 
-export { Silver, Black, U2, Mnelia };
+export const getThemeConstants = (mode: ColorScheme): ThemeConstants => ({
+  colors: colorThemes[mode],
+});

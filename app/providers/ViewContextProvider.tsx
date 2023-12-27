@@ -69,7 +69,7 @@ export const ViewContext = createContext<ViewContextStateType>([
 ]);
 
 interface Props {
-  children: React.ReactChild;
+  children: React.ReactNode;
 }
 
 const ViewContextProvider = ({ children }: Props) => {

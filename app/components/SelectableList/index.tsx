@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 
 import ErrorScreen from "components/ErrorScreen";
 import { AnimatePresence } from "framer-motion";
-import styled, { css } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 
 import LoadingScreen from "components/LoadingScreen";
 import { ViewOption } from "components/views";
@@ -10,6 +10,7 @@ import { useAudioPlayer, useViewContext } from "hooks";
 import SelectableListItem from "./SelectableListItem";
 import { IconProps } from "components/Icon/icons/sharedTypes";
 import { IconName } from "components/Icon/Icon";
+import Screen from "utils/constants/Screen";
 
 export const getConditionalOption = (
   condition?: boolean,
@@ -109,9 +110,15 @@ const RootContainer = styled.div<{ $variant: "list" | "grid" }>`
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
           grid-gap: 30px;
-          padding: 16px;
+          padding-top: 16px;
+          padding-left: 16px;
+          padding-right: 16px;
           align-items: stretch;
           justify-items: center;
+
+          ${Screen.SM.MediaQuery} {
+            grid-template-columns: 1fr 1fr;
+          }
         `
       : null};
 `;
@@ -129,6 +136,7 @@ const SelectableList = ({
   emptyMessage = "Nothing to see here",
   variant = "list",
 }: Props) => {
+  const theme = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const { showView } = useViewContext();
   const { play } = useAudioPlayer();
@@ -168,7 +176,7 @@ const SelectableList = ({
   return (
     <AnimatePresence>
       {loading ? (
-        <LoadingScreen backgroundColor="white" />
+        <LoadingScreen backgroundColor={theme.colors.background.primary} />
       ) : options.length > 0 ? (
         <RootContainer ref={containerRef} $variant={variant}>
           {options.map((option, index) => (

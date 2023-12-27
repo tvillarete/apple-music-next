@@ -12,7 +12,7 @@ const Handle = styled.div`
   width: 48px;
   height: 6px;
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: ${({ theme }) => theme.colors.content.tertiary};
   cursor: grab;
 `;
 

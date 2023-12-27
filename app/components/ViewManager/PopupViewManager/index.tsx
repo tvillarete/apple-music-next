@@ -13,7 +13,7 @@ const RootContainer = styled.div<ContainerProps>`
   position: absolute;
   height: 100%;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${({ theme }) => theme.colors.black}80;
 
   ${({ $isHidden }) =>
     $isHidden &&

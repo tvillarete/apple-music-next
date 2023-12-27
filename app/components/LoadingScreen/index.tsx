@@ -1,6 +1,6 @@
 import { fade } from "animation";
 import { motion } from "framer-motion";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 interface ContainerProps {
   $backgroundColor?: string;
@@ -25,6 +25,8 @@ interface Props {
 }
 
 const LoadingScreen = ({ size, backgroundColor }: Props) => {
+  const theme = useTheme();
+
   return (
     <Container {...fade} $backgroundColor={backgroundColor}>
       <svg
@@ -38,7 +40,7 @@ const LoadingScreen = ({ size, backgroundColor }: Props) => {
         <g
           strokeWidth="200"
           strokeLinecap="round"
-          stroke="#000000"
+          stroke={theme.colors.content.primary}
           fill="none"
           id="spinner"
         >

@@ -5,20 +5,19 @@ import {
   useEffect,
   useState,
 } from "react";
+import { ColorScheme } from "utils/constants/theme";
 import { getServiceParam, SELECTED_SERVICE_KEY } from "utils/service";
-
-import { DeviceThemeName } from "../../utils/themes";
 
 type StreamingService = "apple" | "spotify";
 
-export const DEVICE_COLOR_KEY = "ipodSelectedDeviceTheme";
-export const VOLUME_KEY = "ipodVolume";
+export const VOLUME_KEY = "musicJsVolume";
+export const COLOR_SCHEME_KEY = "musicJsColorScheme";
 
 export interface SettingsState {
   service?: StreamingService;
   isSpotifyAuthorized: boolean;
   isAppleAuthorized: boolean;
-  deviceTheme: DeviceThemeName;
+  colorScheme: ColorScheme;
 }
 
 type SettingsContextType = [
@@ -36,7 +35,7 @@ export type SettingsHook = SettingsState & {
   setIsSpotifyAuthorized: (val: boolean) => void;
   setIsAppleAuthorized: (val: boolean) => void;
   setService: (service?: StreamingService) => void;
-  setDeviceTheme: (deviceTheme: DeviceThemeName) => void;
+  setColorScheme: (colorScheme?: ColorScheme) => void;
 };
 
 export const useSettings = (): SettingsHook => {
@@ -80,10 +79,19 @@ export const useSettings = (): SettingsHook => {
     [setState]
   );
 
-  const setDeviceTheme = useCallback(
-    (deviceTheme: DeviceThemeName) => {
-      setState((prevState) => ({ ...prevState, deviceTheme }));
-      localStorage.setItem(DEVICE_COLOR_KEY, deviceTheme);
+  const setColorScheme = useCallback(
+    (colorScheme?: ColorScheme) => {
+      setState((prevState) => {
+        const updatedColorScheme =
+          colorScheme ?? prevState.colorScheme === "dark" ? "default" : "dark";
+
+        localStorage.setItem(COLOR_SCHEME_KEY, `${updatedColorScheme}`);
+
+        return {
+          ...prevState,
+          colorScheme: updatedColorScheme,
+        };
+      });
     },
     [setState]
   );
@@ -94,7 +102,7 @@ export const useSettings = (): SettingsHook => {
     setIsSpotifyAuthorized,
     setIsAppleAuthorized,
     setService,
-    setDeviceTheme,
+    setColorScheme,
   };
 };
 
@@ -109,7 +117,7 @@ export const SettingsProvider = ({ children }: Props) => {
     isAppleAuthorized: false,
     isSpotifyAuthorized: false,
     service: undefined,
-    deviceTheme: "silver",
+    colorScheme: "default",
   });
 
   const handleMount = useCallback(() => {
@@ -119,8 +127,8 @@ export const SettingsProvider = ({ children }: Props) => {
         serviceParam ??
         (localStorage.getItem(SELECTED_SERVICE_KEY) as StreamingService) ??
         undefined,
-      deviceTheme:
-        (localStorage.getItem(DEVICE_COLOR_KEY) as DeviceThemeName) ?? "silver",
+      colorScheme:
+        (localStorage.getItem(COLOR_SCHEME_KEY) as ColorScheme) ?? "default",
     }));
   }, [serviceParam]);
 

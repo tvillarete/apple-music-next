@@ -16,7 +16,7 @@ interface ContainerProps {
 
 /** Responsible for putting the view at the proper z-index. */
 const RootContainer = styled.div<ContainerProps>`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.background.primary};
   z-index: ${(props) => props.$index};
 `;
 
@@ -30,7 +30,7 @@ export const AnimatedRootContainer = styled(motion.div)<{
   left: 0;
   right: 0;
   padding-top: 84px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.background.primary};
   box-shadow: 0px 8px 64px rgba(33, 30, 30, 0.1);
   filter: ${({ $isInactive }) => $isInactive && "brightness(0.8)"};
   transition: filter ${SCREEN_ANIMATION_DURATION}s ease-in-out;

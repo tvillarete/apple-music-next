@@ -12,7 +12,12 @@ type ScreenId =
   | "album"
   | "playlists"
   | "playlist";
-type PopupId = "spotifyNotSupportedPopup" | "spotifyNonPremiumPopup";
+
+type PopupId =
+  | "spotifyNotSupportedPopup"
+  | "spotifyNonPremiumPopup"
+  | "signinPopup"
+  | "signOutPopup";
 
 export type ViewType = "screen" | "actionSheet" | "popup";
 
@@ -73,21 +78,6 @@ export const views: Record<ViewId, ViewOption> = {
   //   title: "Service",
   //   type: WINDOW_TYPE.ActionSheet,
   // },
-  // deviceThemeActionSheet: {
-  //   id: "deviceThemeActionSheet",
-  //   title: "Device theme",
-  //   type: WINDOW_TYPE.ActionSheet,
-  // },
-  // signinPopup: {
-  //   id: "signinPopup",
-  //   title: "Sign in",
-  //   type: WINDOW_TYPE.ActionSheet,
-  // },
-  // signOutPopup: {
-  //   id: "signOutPopup",
-  //   title: "Sign out",
-  //   type: WINDOW_TYPE.ActionSheet,
-  // },
 
   // Popups
   spotifyNotSupportedPopup: {
@@ -98,6 +88,16 @@ export const views: Record<ViewId, ViewOption> = {
   spotifyNonPremiumPopup: {
     id: "spotifyNonPremiumPopup",
     title: "Premium",
+    type: "popup",
+  },
+  signinPopup: {
+    id: "signinPopup",
+    title: "Sign in",
+    type: "popup",
+  },
+  signOutPopup: {
+    id: "signOutPopup",
+    title: "Sign out",
     type: "popup",
   },
 };

@@ -1,13 +1,11 @@
 import Icon from "components/Icon/Icon";
 import { MouseEventHandler } from "react";
-import styled, { css } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 import { Unit } from "utils/constants";
 
 import { SelectableListOption } from ".";
 
 type ListItemVariant = "list" | "grid";
-
-const BACKGROUND_COLOR = "rgb(199, 199, 204)";
 
 const RootButtonContainer = styled.button<{
   $hasImage: boolean;
@@ -16,7 +14,7 @@ const RootButtonContainer = styled.button<{
 }>`
   width: 100%;
   border: none;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.background.primary};
   padding-left: ${({ $hasImage }) => ($hasImage ? 0 : "16px")};
   margin: 0;
   appearance: none;
@@ -28,8 +26,8 @@ const RootButtonContainer = styled.button<{
   user-select: none;
 
   &:active {
-    background-color: ${({ $variant }) =>
-      $variant === "list" ? BACKGROUND_COLOR : null};
+    background-color: ${({ $variant, theme }) =>
+      $variant === "list" ? theme.colors.background.tertiary : null};
   }
 
   ${({ $variant }) =>
@@ -64,7 +62,7 @@ const ContentContainer = styled.div<{ $variant: ListItemVariant }>`
   align-items: center;
   grid-template-columns: 1fr 0.2fr;
   height: 100%;
-  border-bottom: 0.5px solid ${BACKGROUND_COLOR};
+  border-bottom: 0.5px solid ${({ theme }) => theme.colors.border.opaque};
   text-align: left;
 
   ${({ $variant }) =>
@@ -98,15 +96,17 @@ const Label = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: ${({ theme }) => theme.colors.content.primary};
 `;
 
 const SubLabel = styled(Label)<{ $variant: ListItemVariant }>`
   font-weight: normal;
   font-size: ${({ $variant }) => ($variant === "grid" ? "15px" : "14px")};
-  color: #3c3c4399;
+  color: ${({ theme }) => theme.colors.content.secondary};
 `;
 
 const Image = styled.img<{ $variant: ListItemVariant; $size?: number }>`
+  position: relative;
   height: ${({ $size }) => ($size ? `${$size}px` : "3rem")};
   width: ${({ $size }) => ($size ? `${$size}px` : "3rem")};
   margin-right: ${Unit.XXS};
@@ -135,6 +135,7 @@ interface Props {
 }
 
 const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
+  const theme = useTheme();
   const hasImage = !!option.image;
   const hasIconLeft = !!option.iconLeft && variant === "list";
   const hasIconRight = variant === "list";
@@ -171,7 +172,11 @@ const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
         </LeftContentContainer>
         {hasIconRight && (
           <RightContentContainer>
-            <StyledArrowRight size="xsmall" color="#C5C5C6" name="arrowRight" />
+            <StyledArrowRight
+              size="xsmall"
+              color={theme.colors.content.tertiary}
+              name="arrowRight"
+            />
           </RightContentContainer>
         )}
       </ContentContainer>

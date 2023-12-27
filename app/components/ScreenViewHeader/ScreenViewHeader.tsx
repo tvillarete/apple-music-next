@@ -63,6 +63,7 @@ const Text = styled(motion.p)<{
   opacity: ${({ $isHidden }) => ($isHidden ? 0 : 1)};
   margin-left: ${({ $isHidden }) => ($isHidden ? "-100px" : "16px")};
   color: #d34c4b;
+  color: ${({ theme }) => theme.colors.red};
   cursor: pointer;
   transition: all ${SCREEN_ANIMATION_DURATION}s ease;
   animation: ${({ $noAnimation }) =>
@@ -105,7 +106,7 @@ const Text = styled(motion.p)<{
           font-size: 28px;
           font-weight: 600;
           margin-left: 0;
-          color: black;
+          color: ${({ theme }) => theme.colors.content.primary};
           cursor: default;
           pointer-events: none;
           animation: none;
@@ -165,11 +166,15 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
     return prevViewOptions.title ?? views[prevViewOptions.id].title;
   }, [prevViewOptions]);
 
+  const screenViewStack = useMemo(() => {
+    return viewStack.filter((view) => view.type === "screen");
+  }, [viewStack]);
+
   /** The base view is the view at the bottom of the stack. */
   const isBaseView = viewIndex === 0;
-  const isActiveView = viewIndex === viewStack.length - 1;
-  const isInactiveView = viewIndex < viewStack.length - 1;
-  const isHiddenView = viewIndex < viewStack.length - 2;
+  const isActiveView = viewIndex === screenViewStack.length - 1;
+  const isInactiveView = viewIndex < screenViewStack.length - 1;
+  const isHiddenView = viewIndex < screenViewStack.length - 2;
 
   const handleBackClick = useCallback(() => {
     hideView();
@@ -180,7 +185,7 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
       <TopRowContainer>
         <BackButtonContainer>
           <AnimatePresence>
-            {viewStack.length > 1 ? (
+            {screenViewStack.length > 1 ? (
               <BackButtonIconContainer
                 onClick={handleBackClick}
                 {...backArrowAnimation}

@@ -1,6 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SettingsProvider } from "hooks";
+import { SettingsContext, SettingsProvider } from "hooks";
 import AudioControls from "components/AudioControls/AudioControls";
 import { ViewManager } from "components/ViewManager";
 import { AudioPlayerProvider } from "hooks/audio";
@@ -8,7 +8,8 @@ import { MusicKitProvider } from "hooks/musicKit";
 import { SpotifySDKProvider } from "hooks/spotify";
 import ViewContextProvider from "providers/ViewContextProvider";
 import { memo } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
+import { getThemeConstants } from "utils/constants/theme";
 
 const RootContainer = styled.div`
   position: relative;
@@ -19,9 +20,8 @@ const RootContainer = styled.div`
 const GlobalStyles = createGlobalStyle`
   body {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    height: 100vh;
+    height: 100dvh;
     margin: 0;
-    overflow: hidden;
     width: 100vw;
   }
 
@@ -32,6 +32,7 @@ const GlobalStyles = createGlobalStyle`
   h5,
   h6 {
     margin: 0;
+    color: ${({ theme }) => theme.colors.content.primary};
   }
 
   p {
@@ -42,6 +43,7 @@ const GlobalStyles = createGlobalStyle`
     letter-spacing: -0.408px;
     font-feature-settings: "case";
     margin: 0;
+    color: ${({ theme }) => theme.colors.content.primary};
   }
 
   * {
@@ -63,26 +65,32 @@ const AppleMusicApp = ({
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <SettingsProvider>
-        <GlobalStyles />
-        <RootContainer>
+    <RootContainer>
+      <QueryClientProvider client={queryClient}>
+        <SettingsProvider>
           <ViewContextProvider>
-            <SpotifySDKProvider
-              initialAccessToken={spotifyAccessToken}
-              refreshToken={spotifyRefreshToken}
-            >
-              <MusicKitProvider token={appleAccessToken}>
-                <AudioPlayerProvider>
-                  <ViewManager />
-                  <AudioControls />
-                </AudioPlayerProvider>
-              </MusicKitProvider>
-            </SpotifySDKProvider>
+            <SettingsContext.Consumer>
+              {([{ colorScheme }]) => (
+                <ThemeProvider theme={getThemeConstants(colorScheme)}>
+                  <GlobalStyles />
+                  <SpotifySDKProvider
+                    initialAccessToken={spotifyAccessToken}
+                    refreshToken={spotifyRefreshToken}
+                  >
+                    <MusicKitProvider token={appleAccessToken}>
+                      <AudioPlayerProvider>
+                        <ViewManager />
+                        <AudioControls />
+                      </AudioPlayerProvider>
+                    </MusicKitProvider>
+                  </SpotifySDKProvider>
+                </ThemeProvider>
+              )}
+            </SettingsContext.Consumer>
           </ViewContextProvider>
-        </RootContainer>
-      </SettingsProvider>
-    </QueryClientProvider>
+        </SettingsProvider>
+      </QueryClientProvider>
+    </RootContainer>
   );
 };
 

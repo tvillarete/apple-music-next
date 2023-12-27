@@ -1,13 +1,12 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
-import { popInAnimation } from "animation";
+import { popupAnimation } from "animation";
 import { SelectableListOption } from "components/SelectableList";
 import { motion } from "framer-motion";
-import { useEventListener, useViewContext } from "hooks";
 import { ViewOptions } from "providers/ViewContextProvider";
 import styled from "styled-components";
 import { Unit } from "utils/constants";
-import { IpodEvent } from "utils/events";
+import { useViewContext } from "hooks";
 
 interface RootContainerProps {
   index: number;
@@ -27,59 +26,53 @@ export const RootContainer = styled(motion.div)<RootContainerProps>`
 `;
 
 interface ContentTransitionContainerProps {
-  isHidden: boolean;
+  $hidden: boolean;
 }
 
-/** Slides the view in from the bottom if it is at the top of the stack. */
 const ContentTransitionContainer = styled.div<ContentTransitionContainerProps>`
   position: relative;
-  background: linear-gradient(
-    180deg,
-    #a2a8b7 0%,
-    rgba(38, 52, 88, 0.92) 20.6%,
-    #28365a 100%
-  );
-  width: 80%;
-  padding: ${Unit.XXS};
-  box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.39);
-  border: 2.5px solid white;
-  border-radius: 12px;
-  color: white;
-  font-weight: 500;
+  width: min(300px, 80vw);
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
+  backdrop-filter: blur(40px);
+  border-radius: 14px;
+  overflow: clip;
+`;
+
+const TitleContainer = styled.div`
+  padding: ${Unit.MD} ${Unit.SM} ${Unit.SM};
   text-align: center;
 `;
 
-const TitleText = styled.h3`
-  margin: ${Unit.XS} 0 ${Unit.XS};
-  font-size: 16px;
+const TitleText = styled.p`
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.content.primary};
 `;
 
-const DescriptionText = styled(TitleText)`
+const DescriptionText = styled.p`
   margin: ${Unit.XS} 0 ${Unit.XS};
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 400;
+  color: ${({ theme }) => theme.colors.content.primary};
 `;
 
 const OptionsContainer = styled.div`
-  display: flex;
+  display: grid;
 `;
 
-const OptionText = styled.h3`
-  margin: 0;
-  padding: ${Unit.XS} ${Unit.XXS};
-  font-size: 16px;
-  background: linear-gradient(180deg, #8c94a8 0%, #334164 44.97%, #445070 100%);
-  border: 2px solid #242e47;
-  border-radius: 8px;
+const OptionButton = styled.button`
+  color: ${({ theme }) => theme.colors.blue};
+  appearance: none;
+  border: none;
+  padding: ${Unit.SM} 0;
+  font-size: 1rem;
+  border-top: 0.33px solid ${({ theme }) => theme.colors.border.opaque};
+  background-color: transparent;
+  cursor: pointer;
 
-  text-shadow: 0px 0px 1px #505050;
-`;
-
-const OptionContainer = styled.div`
-  flex: 1;
-  text-align: center;
-  border: 2px solid transparent;
-  margin-top: 8px;
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `;
 
 interface Props {
@@ -111,24 +104,35 @@ const Popup = ({ viewStack, index, isHidden }: Props) => {
         ];
   }, [viewOptions.listOptions, viewOptions.type]);
 
-  useEventListener<IpodEvent>("centerclick", () => {
-    hideView();
-  });
+  const handleSelect = useCallback(
+    (option: SelectableListOption) => {
+      if (option.type === "action") {
+        option.onSelect();
+        hideView();
+      }
+    },
+    [hideView]
+  );
 
   return (
     <RootContainer
       data-view-id={viewOptions.id}
       index={index}
-      {...popInAnimation}
+      {...popupAnimation}
     >
-      <ContentTransitionContainer isHidden={isHidden}>
-        <TitleText>{viewOptions.title}</TitleText>
-        <DescriptionText>{viewOptions.description}</DescriptionText>
+      <ContentTransitionContainer $hidden={isHidden}>
+        <TitleContainer>
+          <TitleText>{viewOptions.title}</TitleText>
+          <DescriptionText>{viewOptions.description}</DescriptionText>
+        </TitleContainer>
         <OptionsContainer>
-          {listOptions.map((option, i) => (
-            <OptionContainer key={`popup-option-${option.label}`}>
-              <OptionText>{option.label}</OptionText>
-            </OptionContainer>
+          {listOptions.map((option, index) => (
+            <OptionButton
+              key={`popup-option-${option.label}`}
+              onClick={() => handleSelect(option)}
+            >
+              {option.label}
+            </OptionButton>
           ))}
         </OptionsContainer>
       </ContentTransitionContainer>

@@ -10,7 +10,7 @@ const Container = styled.div`
   position: absolute;
   height: 100%;
   width: 100%;
-  background: white;
+  background-color: ${({ theme }) => theme.colors.background.primary};
 `;
 
 interface Props {

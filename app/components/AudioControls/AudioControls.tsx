@@ -2,7 +2,7 @@ import { SCREEN_ANIMATION_DURATION } from "animation";
 import DragHandle from "components/AudioControls/components/DragHandle";
 import NowPlayingArtwork from "components/AudioControls/components/NowPlayingArtwork";
 import { motion, PanInfo } from "framer-motion";
-import { useViewContext } from "hooks";
+import { useAudioPlayer, useViewContext } from "hooks";
 import { memo, useCallback, useMemo } from "react";
 import styled, { css } from "styled-components";
 import MiniPlayerControls from "components/AudioControls/components/MiniPlayerControls";
@@ -14,24 +14,24 @@ const RootContainer = styled(motion.div)<{
   $isExpanded: boolean;
 }>`
   align-items: start;
-  background-color: white;
-  border: 0.5px solid #acacac11;
+  background-color: ${({ theme }) => theme.colors.background.tertiary};
   bottom: 0;
   display: grid;
   grid-template-rows: 48px 1fr 1.1fr;
-  height: 100vh;
+  height: 100dvh;
   justify-content: center;
   left: 0;
   position: absolute;
   right: 0;
   z-index: 10;
+  overflow: clip;
 
   ${({ $isExpanded }) =>
     !$isExpanded &&
     css`
       align-items: center;
       backdrop-filter: blur(50px);
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: ${({ theme }) => theme.colors.background.tertiary}50;
       border-radius: 16px;
       box-shadow: 0px 10px 100px rgba(0, 0, 0, 0.5);
       grid-template-columns: 64px 1fr;
@@ -42,9 +42,25 @@ const RootContainer = styled(motion.div)<{
     `}
 `;
 
+const ArtworkBackground = styled.div<{ url?: string }>`
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background: ${(props) => (props.url ? `url('${props.url}')` : "transparent")}
+    no-repeat center center;
+  background-size: cover;
+  filter: blur(60px) brightness(0.4);
+  contain: paint;
+  transition: background 0.5s ease-in-out;
+  transform: scale(1.2);
+`;
+
 const AudioControls = () => {
   const { isAudioControlsDrawerOpen, toggleAudioControlsDrawer } =
     useViewContext();
+  const { nowPlayingItem } = useAudioPlayer();
+  const albumArtworkUrl = nowPlayingItem?.artwork?.url;
 
   const layoutTransition = useMemo(
     () => ({
@@ -79,6 +95,7 @@ const AudioControls = () => {
       onDragEnd={handleDrag}
       transition={layoutTransition}
     >
+      <ArtworkBackground url={albumArtworkUrl} />
       {isAudioControlsDrawerOpen ? (
         <DragHandle onClick={() => toggleAudioControlsDrawer()} />
       ) : null}

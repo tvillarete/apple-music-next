@@ -3,7 +3,7 @@ import { fade } from "animation";
 import Icon, { IconSize } from "components/Icon/Icon";
 import { useAudioPlayer } from "hooks";
 import { memo } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const MediaIconContainer = styled(motion.div)`
   display: grid;
@@ -42,12 +42,15 @@ const increaseIconSize = (iconSize: IconSize): IconSize => {
 export interface TrackControlsProps {
   isSkipPrevButtonVisible?: boolean;
   iconSize?: "small" | "medium" | "large";
+  color?: string;
 }
 
 const TrackControls = ({
   isSkipPrevButtonVisible = true,
   iconSize = "medium",
+  color,
 }: TrackControlsProps) => {
+  const theme = useTheme();
   const { togglePlayPause, skipNext, skipPrevious, playbackInfo } =
     useAudioPlayer();
   const { isPlaying } = playbackInfo;
@@ -62,17 +65,29 @@ const TrackControls = ({
     >
       {isSkipPrevButtonVisible ? (
         <MediaIcon
+          color={color ?? theme.colors.content.primary}
           name="skipPrev"
           size={increaseIconSize(iconSize)}
           onClick={skipPrevious}
         />
       ) : null}
       {isPlaying ? (
-        <MediaIcon name="pause" size={iconSize} onClick={togglePlayPause} />
+        <MediaIcon
+          color={color ?? theme.colors.content.primary}
+          name="pause"
+          size={iconSize}
+          onClick={togglePlayPause}
+        />
       ) : (
-        <MediaIcon name="play" size={iconSize} onClick={togglePlayPause} />
+        <MediaIcon
+          color={color ?? theme.colors.content.primary}
+          name="play"
+          size={iconSize}
+          onClick={togglePlayPause}
+        />
       )}
       <MediaIcon
+        color={color ?? theme.colors.content.primary}
         name="skipNext"
         size={increaseIconSize(iconSize)}
         onClick={skipNext}

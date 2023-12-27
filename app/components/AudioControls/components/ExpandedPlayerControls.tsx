@@ -1,7 +1,7 @@
 import TrackControls from "components/AudioControls/components/TrackControls";
 import { useAudioPlayer } from "hooks";
 import { memo } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const RootContainer = styled.div`
   display: grid;
@@ -15,15 +15,19 @@ const TrackInfoContainer = styled.div`
   min-height: 64px;
 `;
 
-const TitleText = styled.h3`
+const TitleText = styled.p`
+  font-size: 1.2rem;
   font-weight: 600;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
-const SubtitleText = styled.h3`
+const SubtitleText = styled.p`
   font-weight: 400;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const ExpandedPlayerControls = () => {
+  const theme = useTheme();
   const { nowPlayingItem, togglePlayPause } = useAudioPlayer();
 
   const title = nowPlayingItem?.name ?? "Not playing";
@@ -35,7 +39,7 @@ const ExpandedPlayerControls = () => {
         <TitleText onClick={togglePlayPause}>{title}</TitleText>
         {!!subtitle && <SubtitleText>{subtitle}</SubtitleText>}
       </TrackInfoContainer>
-      <TrackControls iconSize="large" />
+      <TrackControls color={theme.colors.white} iconSize="large" />
     </RootContainer>
   );
 };
