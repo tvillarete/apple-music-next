@@ -8,7 +8,7 @@ import { MusicKitProvider } from "hooks/musicKit";
 import ViewContextProvider from "providers/ViewContextProvider";
 import { memo, useCallback, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { getThemeConstants } from "utils/constants/theme";
+import { getThemeConstants } from "utils/theme";
 import { SpotifySDKProvider } from "providers/SpotifySdkProvider";
 import * as SpotifyUtils from "utils/spotify";
 import { GlobalStyles } from "components/AppleMusicApp/GlobalStyles";

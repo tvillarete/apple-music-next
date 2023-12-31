@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { ColorScheme } from "utils/constants/theme";
+import { ColorScheme } from "utils/theme";
 import { getServiceParam, SELECTED_SERVICE_KEY } from "utils/service";
 
 type StreamingService = "apple" | "spotify";
