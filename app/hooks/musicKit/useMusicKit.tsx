@@ -27,7 +27,7 @@ export type MusicKitHook = MusicKitState & {
 
 export const useMusicKit = (): MusicKitHook => {
   const musicKitRef = useRef<typeof MusicKit>();
-  let musicKit: typeof MusicKit | undefined = musicKitRef.current;
+  const musicKit: typeof MusicKit | undefined = musicKitRef.current;
 
   // Ensure that MusicKit is only mounted on the client side and not during SSR.
   useEffect(() => {
@@ -114,7 +114,7 @@ export const MusicKitProvider = ({ children, token }: Props) => {
     handleConfigure();
   });
 
-  useEventListener("musickitconfigured", (e) => {
+  useEventListener("musickitconfigured", () => {
     console.log("MusicKit configured");
     setIsConfigured(true);
   });

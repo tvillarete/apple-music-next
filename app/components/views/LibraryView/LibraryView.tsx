@@ -13,7 +13,7 @@ import { useMusicKit } from "hooks/musicKit/useMusicKit";
 const RootContainer = styled.div``;
 
 const LibraryView = () => {
-  const { colorScheme, setColorScheme } = useSettings();
+  const { setColorScheme } = useSettings();
   const { setScreenViewOptions, showView } = useViewContext();
   const { signIn: signInWithSpotify, signOut: signOutSpotify } =
     useSpotifySDK();

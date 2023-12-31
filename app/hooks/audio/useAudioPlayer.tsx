@@ -53,7 +53,6 @@ interface Props {
 }
 
 export const AudioPlayerProvider = ({ children }: Props) => {
-  const { viewStack } = useViewContext();
   const { service, isSpotifyAuthorized, isAppleAuthorized } = useSettings();
   const { spotifyPlayer, accessToken, deviceId } = useSpotifySDK();
   const { music } = useMusicKit();
@@ -165,8 +164,6 @@ export const AudioPlayerProvider = ({ children }: Props) => {
   }, [music, service, spotifyPlayer]);
 
   const togglePlayPause = useCallback(async () => {
-    const activeView = viewStack[viewStack.length - 1];
-
     switch (service) {
       case "apple":
         // TODO: Update types for MusicKit V3
@@ -183,7 +180,7 @@ export const AudioPlayerProvider = ({ children }: Props) => {
       default:
         throw new Error("Unable to play: service not specified");
     }
-  }, [music, service, spotifyPlayer, viewStack]);
+  }, [music, service, spotifyPlayer]);
 
   const skipNext = useCallback(async () => {
     if (!nowPlayingItem) {

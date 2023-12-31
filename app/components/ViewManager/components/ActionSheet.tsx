@@ -2,11 +2,9 @@ import { useMemo } from "react";
 
 import { slideUpAnimation } from "animation";
 import { motion } from "framer-motion";
-import { useEventListener, useViewContext } from "hooks";
 import { ViewOptions } from "providers/ViewContextProvider";
 import styled from "styled-components";
 import { Unit } from "utils/constants";
-import { IpodEvent } from "utils/events";
 import { SelectableListOption } from "components/SelectableList";
 
 interface RootContainerProps {
@@ -72,7 +70,6 @@ interface Props {
 }
 
 const ActionSheet = ({ viewStack, index, isHidden }: Props) => {
-  const { hideView } = useViewContext();
   const viewOptions = viewStack[index];
 
   const options: SelectableListOption[] = useMemo(() => {
@@ -89,10 +86,6 @@ const ActionSheet = ({ viewStack, index, isHidden }: Props) => {
     ];
   }, [viewOptions]);
 
-  useEventListener<IpodEvent>("centerclick", () => {
-    hideView();
-  });
-
   return (
     <RootContainer
       data-view-id={viewOptions.id}
@@ -100,7 +93,7 @@ const ActionSheet = ({ viewStack, index, isHidden }: Props) => {
       {...slideUpAnimation}
     >
       <ContentTransitionContainer isHidden={isHidden}>
-        {options.map((option, i) => (
+        {options.map((option) => (
           <OptionContainer key={`popup-option-${option.label}`}>
             <OptionText>{option.label}</OptionText>
           </OptionContainer>

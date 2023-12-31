@@ -126,7 +126,7 @@ const Popup = ({ viewStack, index, isHidden }: Props) => {
           <DescriptionText>{viewOptions.description}</DescriptionText>
         </TitleContainer>
         <OptionsContainer>
-          {listOptions.map((option, index) => (
+          {listOptions.map((option) => (
             <OptionButton
               key={`popup-option-${option.label}`}
               onClick={() => handleSelect(option)}
