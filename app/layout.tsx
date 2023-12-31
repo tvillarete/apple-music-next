@@ -1,10 +1,13 @@
 import StyledComponentsRegistry from "lib/registry";
 import { Metadata, Viewport } from "next";
 import Script from "next/script";
+import { getRootAppUrl } from "utils";
 
 export const metadata: Metadata = {
   title: "Apple Music.js",
   description: "iOS Music app built for the web",
+  metadataBase: new URL(getRootAppUrl()),
+  manifest: "/music/manifest.json",
   openGraph: {
     url: "http://tannerv.com/music",
     title: "Apple Music.js",
