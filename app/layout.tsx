@@ -1,13 +1,16 @@
+import { getRootAppUrl } from "api/spotify/utils";
 import StyledComponentsRegistry from "lib/registry";
 import { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { getRootAppUrl } from "utils";
+
+const appleTouchIconUrl = `${getRootAppUrl()}/music/apple-touch-icon.png`;
+const favicon32Url = `${getRootAppUrl()}/music/favicon-32x32.png`;
+const favicon16Url = `${getRootAppUrl()}/music/favicon-16x16.png`;
 
 export const metadata: Metadata = {
   title: "Apple Music.js",
   description: "iOS Music app built for the web",
   metadataBase: new URL(getRootAppUrl()),
-  manifest: "/music/manifest.json",
   openGraph: {
     url: "http://tannerv.com/music",
     title: "Apple Music.js",
@@ -26,24 +29,19 @@ export const metadata: Metadata = {
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
-      url: "apple-touch-icon.png",
+      url: appleTouchIconUrl,
     },
     {
       rel: "icon",
       type: "image/png",
       sizes: "32x32",
-      url: "favicon-32x32.png",
+      url: favicon32Url,
     },
     {
       rel: "icon",
       type: "image/png",
       sizes: "16x16",
-      url: "favicon-16x16.png",
-    },
-    {
-      rel: "mask-icon",
-      url: "safari-pinned-tab.svg",
-      color: "#5bbad5",
+      url: favicon16Url,
     },
   ],
 };

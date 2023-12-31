@@ -1,6 +1,7 @@
 import { differenceInMinutes } from "date-fns";
 import { getRootAppUrl } from "utils";
-import { API_URL, APP_URL } from "utils/constants/api";
+import { API_URL } from "utils/constants/api";
+import { SELECTED_SERVICE_KEY } from "utils/service";
 
 export type TokenResponse = {
   accessToken?: string;
@@ -13,10 +14,10 @@ export type TokenResponse = {
 export const handleSpotifyCode = async (code: string) => {
   try {
     await fetch(`${API_URL}/spotify/callback?code=${code}`);
+
+    localStorage.setItem(SELECTED_SERVICE_KEY, "spotify");
   } catch (error) {
     console.error(`Error: ${error}`);
-  } finally {
-    window.location.href = `${APP_URL}?service=spotify`;
   }
 };
 

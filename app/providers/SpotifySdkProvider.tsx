@@ -147,7 +147,7 @@ export const SpotifySDKProvider = ({ children }: Props) => {
     if (window.Spotify) {
       handleMount();
     } else {
-      window.onSpotifyWebPlaybackSDKReady = handleMount;
+      console.error("Spotify SDK not found on window");
     }
   });
 

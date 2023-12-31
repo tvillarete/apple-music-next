@@ -6,12 +6,13 @@ import { ViewManager } from "components/ViewManager";
 import { AudioPlayerProvider } from "hooks/audio";
 import { MusicKitProvider } from "hooks/musicKit";
 import ViewContextProvider from "providers/ViewContextProvider";
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { getThemeConstants } from "utils/constants/theme";
 import { SpotifySDKProvider } from "providers/SpotifySdkProvider";
 import * as SpotifyUtils from "utils/spotify";
 import { GlobalStyles } from "components/AppleMusicApp/GlobalStyles";
+import { useRouter } from "next/navigation";
 
 const RootContainer = styled.div`
   position: relative;
@@ -29,13 +30,32 @@ interface Props {
 }
 
 const AppleMusicApp = ({ appleAccessToken, spotifyCallbackCode }: Props) => {
+  const router = useRouter();
   const queryClient = new QueryClient();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleCheckSpotifyCallback = useCallback(
+    async (code: string) => {
+      await SpotifyUtils.handleSpotifyCode(code);
+
+      setIsLoading(false);
+
+      router.replace("/");
+    },
+    [router]
+  );
 
   useEffectOnce(() => {
     if (spotifyCallbackCode) {
-      SpotifyUtils.handleSpotifyCode(spotifyCallbackCode);
+      handleCheckSpotifyCallback(spotifyCallbackCode);
+      return;
     }
+    setIsLoading(false);
   });
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <RootContainer>
