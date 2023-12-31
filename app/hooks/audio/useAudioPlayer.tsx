@@ -142,8 +142,10 @@ export const AudioPlayerProvider = ({ children }: Props) => {
       switch (service) {
         case "apple":
           playAppleMusic(queueOptions);
+          break;
         case "spotify":
           playSpotify(queueOptions);
+          break;
         default:
           console.error("Unable to play: service not specified");
       }
