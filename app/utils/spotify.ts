@@ -1,8 +1,39 @@
-import { API_URL } from "utils/constants/api";
+import { differenceInMinutes } from "date-fns";
+import { getRootAppUrl } from "utils";
+import { API_URL, APP_URL } from "utils/constants/api";
 
 export type TokenResponse = {
   accessToken?: string;
   refreshToken?: string;
+};
+
+/**
+ * Accepts a code returned from a Spotify OAuth login and sends it to the API to be exchanged for an access token
+ */
+export const handleSpotifyCode = async (code: string) => {
+  try {
+    await fetch(`${API_URL}/spotify/callback?code=${code}`);
+  } catch (error) {
+    console.error(`Error: ${error}`);
+  } finally {
+    window.location.href = `${APP_URL}?service=spotify`;
+  }
+};
+
+export const checkShouldRefreshSpotifyTokens = (
+  lastRefreshedTimestamp: number | undefined
+) => {
+  if (!lastRefreshedTimestamp) {
+    return true;
+  }
+
+  const lastRefreshDate = new Date(lastRefreshedTimestamp);
+  const now = Date.now();
+
+  const minuteDiff = differenceInMinutes(now, lastRefreshDate);
+  console.log(`Last token refresh: ${minuteDiff} minutes ago`);
+
+  return minuteDiff > 30;
 };
 
 export const getRefreshedSpotifyTokens = async (
@@ -20,22 +51,29 @@ export const getRefreshedSpotifyTokens = async (
   }
 
   try {
-    const response = await fetch(
-      `${API_URL}/spotify/refresh_token?refresh_token=${refreshToken}`,
-      {
-        credentials: "same-origin",
-        mode: "cors",
-      }
-    );
+    const url = `${getRootAppUrl()}/music/api/spotify/refresh?refresh_token=${refreshToken}`;
+    const response = await fetch(url, {
+      credentials: "same-origin",
+      mode: "cors",
+    });
 
+    if (!response.ok) {
+      console.error("Error fetching refresh token:", {
+        url,
+        status: response.status,
+        statusText: response.statusText,
+      });
+
+      return emptyReturnValue;
+    }
     const { accessToken } = await response.json();
 
     return { accessToken, refreshToken };
   } catch (error) {
-    console.error("Error fetching refresh token:", { error });
-  }
+    console.error("Uncaught error during refresh token fetching", { error });
 
-  return emptyReturnValue;
+    return emptyReturnValue;
+  }
 };
 
 export const logOutSpotify = async (): Promise<void> => {

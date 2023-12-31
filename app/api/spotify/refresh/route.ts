@@ -1,11 +1,6 @@
-import axios from "axios";
-import { setCookie } from "api/spotify/utils";
-import {
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET,
-  SPOTIFY_TOKENS_COOKIE_NAME,
-} from "utils/constants/api";
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "utils/constants/api";
 import { NextRequest } from "next/server";
+import { setSpotifyTokens } from "api/spotify/utils";
 
 export async function GET(req: NextRequest) {
   const url = new URL(req.url ?? "");
@@ -28,21 +23,33 @@ export async function GET(req: NextRequest) {
   ).toString("base64");
 
   try {
-    const response = await axios.post(
-      "https://accounts.spotify.com/api/token",
-      params,
+    const response = await fetch(
+      `https://accounts.spotify.com/api/token?${params.toString()}`,
       {
+        method: "POST",
         headers: {
           Authorization: `Basic ${base64EncodedAuthorizationHeader}`,
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }
     );
+    const data = await response.json();
 
-    const accessToken = response.data.access_token;
+    const accessToken = data.access_token;
+    const refreshToken = data.refresh_token;
+    const tokenRefreshTimestamp = Date.now().toString();
+
+    console.log(
+      "Updated accessToken",
+      accessToken,
+      "refreshToken",
+      refreshToken,
+      "tokenRefreshTimestamp",
+      tokenRefreshTimestamp
+    );
 
     if (accessToken) {
-      setCookie(SPOTIFY_TOKENS_COOKIE_NAME, accessToken);
+      setSpotifyTokens(accessToken, refreshToken);
 
       return new Response(
         JSON.stringify({

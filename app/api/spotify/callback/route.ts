@@ -1,11 +1,5 @@
-import axios from "axios";
-
-import {
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_CLIENT_SECRET,
-  SPOTIFY_TOKENS_COOKIE_NAME,
-} from "utils/constants/api";
-import { getSpotifyRedirectUri, setCookie } from "api/spotify/utils";
+import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from "utils/constants/api";
+import { getSpotifyRedirectUri, setSpotifyTokens } from "api/spotify/utils";
 import { NextRequest } from "next/server";
 
 type SpotifyAuthApiResponse = {
@@ -33,33 +27,45 @@ export async function GET(req: NextRequest) {
     `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
   ).toString("base64");
 
-  const options = {
-    headers: {
-      Authorization: `Basic ${base64EncodedAuthorizationHeader}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  };
-
   try {
-    const response = await axios.post<SpotifyAuthApiResponse>(
-      "https://accounts.spotify.com/api/token",
-      new URLSearchParams({
+    const response = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      body: new URLSearchParams({
         code: code as string,
         redirect_uri: spotifyRedirectUri,
         grant_type: "authorization_code",
       }),
-      options
-    );
+      headers: {
+        Authorization: `Basic ${base64EncodedAuthorizationHeader}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    const data: SpotifyAuthApiResponse = await response.json();
 
-    const { access_token, refresh_token } = response.data;
+    const { access_token, refresh_token } = data;
 
     if (access_token) {
-      setCookie(SPOTIFY_TOKENS_COOKIE_NAME, `${access_token},${refresh_token}`);
+      console.log("Setting cookie!");
 
-      return new Response(JSON.stringify(response.data), {
-        status: 200,
-      });
+      setSpotifyTokens(access_token, refresh_token);
+
+      return new Response(
+        JSON.stringify({
+          accessToken: access_token,
+          refreshToken: refresh_token,
+        }),
+        {
+          status: 200,
+        }
+      );
     }
+
+    return new Response(
+      "Error: Access token was not returned from Spotify API",
+      {
+        status: 500,
+      }
+    );
   } catch {
     return new Response(
       "Error: Access token was not returned from Spotify API",

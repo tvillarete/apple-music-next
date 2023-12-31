@@ -1,14 +1,22 @@
-import { CookieSerializeOptions } from "cookie";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import { cookies } from "next/headers";
+import { SPOTIFY_TOKENS_COOKIE_NAME } from "utils/constants/api";
 
-export const getSpotifyRedirectUri = () => {
+/**
+ * [Server-side only] Returns the root URL of the app, depending on the environment
+ */
+export const getRootAppUrl = () => {
   const isDev = process.env.NODE_ENV === "development";
 
   const protocol = isDev ? "http" : "https";
   const rootUrl = isDev ? `localhost:3000` : process.env.VERCEL_BASE_URL;
 
+  return `${protocol}://${rootUrl}`;
+};
+
+export const getSpotifyRedirectUri = () => {
   // Example: http://localhost:3000/music/callback
-  return `${protocol}://${rootUrl}/music/callback`;
+  return `${getRootAppUrl()}/music`;
 };
 
 export const getSpotifyAuthorizationHeader = (
@@ -26,39 +34,42 @@ export const getSpotifyAuthorizationHeader = (
   );
 };
 
-export const generateRandomString = (length: number): string => {
-  let text = "";
-  const possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+export const setSpotifyTokens = (accessToken: string, refreshToken: string) => {
+  const tokenRefreshTimestamp = Date.now().toString();
 
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
+  setCookie(
+    SPOTIFY_TOKENS_COOKIE_NAME,
+    `${accessToken},${refreshToken},${tokenRefreshTimestamp}`,
+    {
+      cookies,
+      sameSite: false,
+    }
+  );
 };
 
-export const setCookie = (name: string, value: unknown) => {
-  const stringValue =
-    typeof value === "object" ? "j:" + JSON.stringify(value) : String(value);
+export const getSpotifyTokens = () => {
+  const spotifyTokens = getCookie(SPOTIFY_TOKENS_COOKIE_NAME, {
+    cookies,
+  });
+  const [storedAccessToken, storedRefreshToken, lastRefreshedTimestamp] =
+    spotifyTokens?.split(",") ?? [undefined, undefined, undefined];
 
-  const options: CookieSerializeOptions = {
-    httpOnly: true,
-    secure: true,
-    path: "/music",
+  console.log({
+    spotifyTokens,
+    storedAccessToken,
+    storedRefreshToken,
+    lastRefreshedTimestamp,
+  });
+
+  return {
+    storedAccessToken,
+    storedRefreshToken,
+    lastRefreshedTimestamp: parseInt(lastRefreshedTimestamp ?? "") || undefined,
   };
-
-  const nextCookies = cookies();
-  nextCookies.set(name, stringValue, options);
 };
 
-export const clearCookie = (name: string) => {
-  const options: CookieSerializeOptions = {
-    httpOnly: true,
-    secure: true,
-    path: "/music",
-    maxAge: -1,
-  };
-
-  const nextCookies = cookies();
-  nextCookies.set(name, "", options);
+export const clearSpotifyTokens = () => {
+  deleteCookie(SPOTIFY_TOKENS_COOKIE_NAME, {
+    cookies,
+  });
 };

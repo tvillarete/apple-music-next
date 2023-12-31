@@ -119,7 +119,7 @@ const useSpotifyDataFetcher = () => {
   );
 
   const fetchArtist = useCallback(
-    async (userId = "", id: string) => {
+    async (id: string) => {
       const response = await fetchSpotifyApi<SpotifyApi.ArtistsAlbumsResponse>({
         endpoint: `artists/${id}/albums`,
         accessToken,

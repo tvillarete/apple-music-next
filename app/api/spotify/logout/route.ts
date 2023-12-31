@@ -1,9 +1,7 @@
-import { clearCookie } from "api/spotify/utils";
-import { SPOTIFY_TOKENS_COOKIE_NAME } from "utils/constants/api";
-import { NextRequest } from "next/server";
+import { clearSpotifyTokens } from "api/spotify/utils";
 
-export async function GET(_req: NextRequest) {
-  clearCookie(SPOTIFY_TOKENS_COOKIE_NAME);
+export async function GET() {
+  clearSpotifyTokens();
 
   return new Response("Logged out of Spotify", {
     status: 200,

@@ -140,7 +140,7 @@ export const useFetchArtistAlbums = (
           options.inLibrary
         );
       } else if (service === "spotify") {
-        return spotifyDataFetcher.fetchArtist(options.userId, options.id);
+        return spotifyDataFetcher.fetchArtist(options.id);
       }
     },
     { enabled: enabled && !options.lazy }

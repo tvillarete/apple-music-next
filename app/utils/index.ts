@@ -41,3 +41,16 @@ export const getMediaOptions = (
     },
   ];
 };
+
+/**
+ *
+ * [Client-side only] Returns the root URL of the app, depending on the environment
+ */
+export const getRootAppUrl = () => {
+  const isDev = process.env.NODE_ENV === "development";
+
+  const protocol = isDev ? "http" : "https";
+  const rootUrl = isDev ? `localhost:3000` : process.env.VERCEL_BASE_URL;
+
+  return `${protocol}://${rootUrl}`;
+};

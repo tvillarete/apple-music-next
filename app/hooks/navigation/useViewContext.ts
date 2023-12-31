@@ -72,8 +72,6 @@ export const useViewContext = (): ViewContextHook => {
             )
           : prevViewState.viewStack.slice(0, -1);
 
-        const activeView = newViewStack[newViewStack.length - 1];
-
         return {
           ...prevViewState,
           viewStack: newViewStack,
