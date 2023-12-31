@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.22.0",
-    "axios": "^0.27.2",
     "cookie": "^0.5.0",
+    "cookies-next": "^4.1.0",
     "date-fns": "^3.0.3",
     "framer-motion": "^10.16.16",
     "he": "^1.2.0",
@@ -23,7 +23,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "6.1.1",
-    "use-debounce": "^8.0.2"
+    "use-debounce": "^8.0.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
@@ -34,6 +35,8 @@
     "@types/react-dom": "18.0.6",
     "@types/spotify-api": "^0.0.16",
     "@types/spotify-web-playback-sdk": "^0.1.12",
+    "@types/uuid": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
     "eslint": "8.26.0",
     "eslint-config-next": "^14.0.4",
     "eslint-plugin-import": "^2.26.0",
@@ -41,7 +44,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-memo": "^0.0.3",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "^0.0.1-alpha.0"
   },
   "peerDependencies": {
     "react-is": "^18.2.0"
