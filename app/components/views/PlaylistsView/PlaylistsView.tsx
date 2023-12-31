@@ -32,7 +32,7 @@ const PlaylistsView = ({ playlists, inLibrary = true }: Props) => {
         label: playlist.name,
         subLabel: playlist.description || `By ${playlist.curatorName}`,
         image: {
-          url: playlist.artwork?.url,
+          url: Utils.getArtwork(200, playlist.artwork?.url),
           size: 100,
           styles: {
             borderRadius: 8,

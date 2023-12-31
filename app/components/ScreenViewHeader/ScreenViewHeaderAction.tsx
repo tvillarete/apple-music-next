@@ -30,7 +30,7 @@ const ScreenViewHeaderAction = ({
 }: ScreenViewHeaderActionProps) => {
   return (
     <RootContainer onClick={onClick} {...props}>
-      {iconName ? <Icon size="small" name={iconName} color="#D34C4B" /> : null}
+      {iconName ? <Icon size="medium" name={iconName} color="#D34C4B" /> : null}
       {title ? <Text>{title}</Text> : null}
     </RootContainer>
   );

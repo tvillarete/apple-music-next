@@ -34,3 +34,16 @@ export const getServiceParam = () => {
 
   return serviceParam as keyof typeof supportedServices | undefined;
 };
+
+export const getServiceDisplayName = (
+  service?: keyof typeof supportedServices
+) => {
+  switch (service) {
+    case "apple":
+      return "Apple Music";
+    case "spotify":
+      return "Spotify";
+    default:
+      return "None";
+  }
+};

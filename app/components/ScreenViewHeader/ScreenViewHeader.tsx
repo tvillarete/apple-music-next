@@ -213,13 +213,6 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
             </motion.div>
           ) : null}
         </BackButtonContainer>
-        <AnimatePresence>
-          {rightActions && isActiveView ? (
-            <RightActionsContainer key="right-actions-container" {...fade}>
-              {rightActions}
-            </RightActionsContainer>
-          ) : null}
-        </AnimatePresence>
       </TopRowContainer>
       <AnimatePresence>
         {viewOptions ? (
@@ -234,6 +227,13 @@ const ViewHeader = ({ viewId }: ScreenViewHeaderProps) => {
                 {isInactiveView ? undefined : titleText}
               </Text>
             </motion.div>
+            <AnimatePresence>
+              {rightActions && isActiveView ? (
+                <RightActionsContainer key="right-actions-container" {...fade}>
+                  {rightActions}
+                </RightActionsContainer>
+              ) : null}
+            </AnimatePresence>
           </BottomRowContainer>
         ) : null}
       </AnimatePresence>

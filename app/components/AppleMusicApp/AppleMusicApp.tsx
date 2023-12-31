@@ -4,7 +4,6 @@ import { SettingsContext, SettingsProvider, useEffectOnce } from "hooks";
 import AudioControlsDrawer from "components/AudioControlsDrawer/AudioControlsDrawer";
 import { ViewManager } from "components/ViewManager";
 import { AudioPlayerProvider } from "hooks/audio";
-import { MusicKitProvider } from "hooks/musicKit";
 import ViewContextProvider from "providers/ViewContextProvider";
 import { memo, useCallback, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
@@ -13,6 +12,8 @@ import { SpotifySDKProvider } from "providers/SpotifySdkProvider";
 import * as SpotifyUtils from "utils/spotify";
 import { GlobalStyles } from "components/AppleMusicApp/GlobalStyles";
 import { useRouter } from "next/navigation";
+import { MusicKitProvider } from "providers/MusicKitProvider";
+import Script from "next/script";
 
 const RootContainer = styled.div`
   position: relative;
@@ -63,23 +64,24 @@ const AppleMusicApp = ({ appleAccessToken, spotifyCallbackCode }: Props) => {
         <SettingsProvider>
           <ViewContextProvider>
             <SpotifySDKProvider>
-              <SettingsContext.Consumer>
-                {([{ colorScheme }]) => (
-                  <ThemeProvider theme={getThemeConstants(colorScheme)}>
-                    <GlobalStyles />
-                    <MusicKitProvider token={appleAccessToken}>
+              <MusicKitProvider token={appleAccessToken}>
+                <SettingsContext.Consumer>
+                  {([{ colorScheme }]) => (
+                    <ThemeProvider theme={getThemeConstants(colorScheme)}>
+                      <GlobalStyles />
                       <AudioPlayerProvider>
                         <ViewManager />
                         <AudioControlsDrawer />
                       </AudioPlayerProvider>
-                    </MusicKitProvider>
-                  </ThemeProvider>
-                )}
-              </SettingsContext.Consumer>
+                    </ThemeProvider>
+                  )}
+                </SettingsContext.Consumer>
+              </MusicKitProvider>
             </SpotifySDKProvider>
           </ViewContextProvider>
         </SettingsProvider>
       </QueryClientProvider>
+      <Script src="https://sdk.scdn.co/spotify-player.js" />
     </RootContainer>
   );
 };

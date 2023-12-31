@@ -7,6 +7,7 @@ import { memo, useCallback, useMemo } from "react";
 import styled, { css } from "styled-components";
 import MiniPlayerControls from "components/AudioControlsDrawer/components/MiniPlayerControls";
 import ExpandedPlayerControls from "components/AudioControlsDrawer/components/ExpandedPlayerControls";
+import { getArtwork } from "utils";
 
 const MINI_PLAYER_HEIGHT = "64px";
 
@@ -31,6 +32,7 @@ const RootContainer = styled(motion.div)<{
     css`
       align-items: center;
       backdrop-filter: blur(50px);
+      -webkit-backdrop-filter: blur(50px);
       background-color: ${({ theme }) => theme.colors.background.tertiary}50;
       border-radius: 16px;
       box-shadow: 0px 10px 100px rgba(0, 0, 0, 0.5);
@@ -66,7 +68,8 @@ const AudioControlsDrawer = () => {
     useViewContext();
   const { nowPlayingItem } = useAudioPlayer();
   const albumArtworkUrl =
-    nowPlayingItem?.artwork?.url ?? "/music/default_album_artwork.png";
+    getArtwork(200, nowPlayingItem?.artwork?.url ?? "") ??
+    "/music/default_album_artwork.png";
 
   const layoutTransition: Transition = useMemo(
     () => ({

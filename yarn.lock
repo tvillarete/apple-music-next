@@ -224,6 +224,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
   integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
+"@types/musickit-js@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/musickit-js/-/musickit-js-1.0.8.tgz#cc430616b897f9edd68dc9b62dcf63012b1aac39"
+  integrity sha512-n9Nb9NKBjVB2mKGCch8TXuzJRyWX6il8zKkO1RsvdeqI5uwLL5KteL/Ki1mwmlACZkKA8euAk84onjIqdWcHCQ==
+
 "@types/node@18.11.3":
   version "18.11.3"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.3.tgz#78a6d7ec962b596fc2d2ec102c4dd3ef073fea6a"

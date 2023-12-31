@@ -31,7 +31,7 @@ const AlbumsView = ({ albums, inLibrary = true }: Props) => {
         headerTitle: album.name,
         label: album.name,
         subLabel: album.artistName,
-        image: { url: Utils.getArtwork(50, album.artwork?.url) ?? "" },
+        image: { url: Utils.getArtwork(300, album.artwork?.url) ?? "" },
         viewId: views.album.id,
         component: () => (
           <AlbumView id={album.id ?? ""} inLibrary={inLibrary} />

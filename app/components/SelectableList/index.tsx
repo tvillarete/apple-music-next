@@ -34,12 +34,12 @@ export type ImageProps = {
 type SharedOptionProps = {
   type?: SelectableListOptionType;
   label: string;
-  isSelected?: boolean;
   subLabel?: string;
   image?: ImageProps;
   iconLeft?: IconProps & {
     name: IconName;
   };
+  contentRight?: React.ReactNode;
   longPressOptions?: SelectableListOption[];
 };
 

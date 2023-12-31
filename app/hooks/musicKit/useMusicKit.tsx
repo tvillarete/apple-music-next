@@ -1,15 +1,6 @@
-import React, {
-  createContext,
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext } from "react";
 
-import { useEventListener, useMKEventListener, useSettings } from "hooks";
+import { useSettings } from "hooks";
 
 export interface MusicKitState {
   musicKit?: typeof MusicKit;
@@ -26,116 +17,35 @@ export type MusicKitHook = MusicKitState & {
 };
 
 export const useMusicKit = (): MusicKitHook => {
-  const musicKitRef = useRef<typeof MusicKit>();
-  const musicKit: typeof MusicKit | undefined = musicKitRef.current;
-
-  // Ensure that MusicKit is only mounted on the client side and not during SSR.
-  useEffect(() => {
-    musicKitRef.current = window.MusicKit;
-  }, []);
-
   const { setIsAppleAuthorized, isSpotifyAuthorized, setService } =
     useSettings();
   const { isConfigured, hasDevToken } = useContext(MusicKitContext);
 
-  const music = useMemo(() => {
-    if (!isConfigured || !hasDevToken) {
-      return {} as MusicKit.MusicKitInstance;
-    }
-
-    return window.MusicKit?.getInstance();
-  }, [hasDevToken, isConfigured]);
-
   const signIn = useCallback(async () => {
-    if (!music.isAuthorized) {
-      await music.authorize();
+    const music = window.MusicKit?.getInstance();
+
+    if (music?.isAuthorized === false) {
+      await music?.authorize();
     }
 
     setService("apple");
-  }, [music, setService]);
+  }, [setService]);
 
   const signOut = useCallback(() => {
-    music.unauthorize();
+    const music = window.MusicKit?.getInstance();
+    music?.unauthorize();
     setIsAppleAuthorized(false);
 
     // Change to Spotify if available.
     setService(isSpotifyAuthorized ? "spotify" : undefined);
-  }, [isSpotifyAuthorized, music, setIsAppleAuthorized, setService]);
+  }, [isSpotifyAuthorized, setIsAppleAuthorized, setService]);
 
   return {
     isConfigured,
     hasDevToken,
-    musicKit,
-    music,
+    musicKit: window.MusicKit,
+    music: window.MusicKit?.getInstance(),
     signIn,
     signOut,
   };
 };
-
-interface Props {
-  children: React.ReactNode;
-  token: string;
-}
-
-export const MusicKitProvider = ({ children, token }: Props) => {
-  const musicKitRef = useRef<typeof MusicKit>();
-  const [hasDevToken, setHasDevToken] = useState(false);
-  const [isConfigured, setIsConfigured] = useState(false);
-  const {
-    isSpotifyAuthorized,
-    setIsAppleAuthorized,
-    setService: setStreamingService,
-  } = useSettings();
-
-  const handleConfigure = useCallback(async () => {
-    try {
-      const music = await window.MusicKit.configure({
-        developerToken: token,
-        app: {
-          name: "Apple Music.js",
-          build: "1.0",
-        },
-      });
-
-      if (music) {
-        setHasDevToken(true);
-      }
-
-      if (music.isAuthorized) {
-        setIsAppleAuthorized(true);
-      }
-    } catch (e) {
-      console.error(`MusicKit configuration error:`, e);
-      setHasDevToken(false);
-    }
-  }, [setIsAppleAuthorized, token]);
-
-  useEventListener("musickitloaded", () => {
-    handleConfigure();
-  });
-
-  useEventListener("musickitconfigured", () => {
-    console.log("MusicKit configured");
-    setIsConfigured(true);
-  });
-
-  useMKEventListener("userTokenDidChange", (e) => {
-    if (e.userToken) {
-      setIsAppleAuthorized(true);
-      setStreamingService("apple");
-    } else {
-      setIsAppleAuthorized(false);
-      setStreamingService(isSpotifyAuthorized ? "spotify" : undefined);
-    }
-  });
-
-  return (
-    <MusicKitContext.Provider
-      value={{ musicKit: musicKitRef.current, isConfigured, hasDevToken }}
-    >
-      {children}
-    </MusicKitContext.Provider>
-  );
-};
-
-export default memo(MusicKitProvider);

@@ -15,7 +15,7 @@ export const convertAppleSong = (data: AppleMusicApi.Song): MediaApi.Song => ({
   id: data.id,
   name: data.attributes?.name ?? "Unknown name",
   url: data.href ?? "",
-  artwork: { url: getAppleArtwork(100, data.attributes?.artwork?.url) ?? "" },
+  artwork: { url: data.attributes?.artwork?.url ?? "" },
   albumName: data.attributes?.albumName,
   artistName: data.attributes?.artistName,
   duration: data.attributes?.durationInMillis ?? 0,
@@ -56,7 +56,7 @@ export const convertApplePlaylist = (
   url: data.href ?? "",
   curatorName: data.attributes?.curatorName ?? "",
   artwork: {
-    url: getAppleArtwork(100, data.attributes?.artwork?.url) ?? "",
+    url: data.attributes?.artwork?.url ?? "",
   },
   description: data.attributes?.description?.standard,
   songs: data.relationships?.tracks?.data.map(convertAppleSong) ?? [],
@@ -89,16 +89,14 @@ export const convertSpotifyPlaylistFull = (
 });
 
 export const convertAppleAlbum = (
-  data: AppleMusicApi.Album,
-  artworkSize?: number
+  data: AppleMusicApi.Album
 ): MediaApi.Album => ({
   id: data.id,
   name: data.attributes?.name ?? "–",
   artistName: data.attributes?.artistName,
   url: data.href ?? "",
   artwork: {
-    url:
-      getAppleArtwork(artworkSize ?? 100, data.attributes?.artwork?.url) ?? "",
+    url: data.attributes?.artwork?.url ?? "",
   },
   songs: data.relationships?.tracks?.data?.map(convertAppleSong) ?? [],
 });
@@ -160,7 +158,7 @@ export const convertAppleMediaItem = (
   albumName: mediaItem.albumName,
   artistName: mediaItem.artistName,
   artwork: {
-    url: getAppleArtwork(100, mediaItem.artworkURL) ?? "",
+    url: mediaItem.artworkURL ?? "",
   },
   duration: mediaItem.playbackDuration,
   id: mediaItem.id,
@@ -207,8 +205,7 @@ export const convertAppleSearchResults = (
 
   return {
     artists: results.artists?.data.map(convertAppleArtist) ?? [],
-    albums:
-      results.albums?.data.map((album) => convertAppleAlbum(album, 100)) ?? [],
+    albums: results.albums?.data.map((album) => convertAppleAlbum(album)) ?? [],
     songs: results.songs?.data.map(convertAppleSong) ?? [],
     playlists: results.playlists?.data.map(convertApplePlaylist) ?? [],
   };

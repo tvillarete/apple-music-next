@@ -1,106 +1,39 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
 import { ArtistsView } from "components/views/ArtistsView";
-import { useSettings, useSpotifySDK, useViewContext } from "hooks";
+import { useViewContext } from "hooks";
 import styled from "styled-components";
 import { AlbumsView } from "components/views/AlbumsView";
 import { PlaylistsView } from "components/views/PlaylistsView";
-import { useMusicKit } from "hooks/musicKit/useMusicKit";
+import SettingsView from "components/views/SettingsView/SettingsView";
 
 const RootContainer = styled.div``;
 
 const LibraryView = () => {
-  const { setColorScheme } = useSettings();
   const { setScreenViewOptions, showView } = useViewContext();
-  const { signIn: signInWithSpotify, signOut: signOutSpotify } =
-    useSpotifySDK();
-  const { signIn: signInWithApple, signOut: signOutApple } = useMusicKit();
 
-  const handleSignInClick = useCallback(() => {
+  const handleOpenSettings = useCallback(() => {
     showView({
-      type: "popup",
-      id: "signinPopup",
-      title: "Sign in",
-      description: "Choose a service",
-      listOptions: [
+      type: "screen",
+      id: "settings",
+      title: "Settings",
+      component: () => <SettingsView />,
+    });
+  }, [showView]);
+
+  useEffect(() => {
+    setScreenViewOptions("library", {
+      headerRightActions: [
         {
-          type: "action",
-          label: "Spotify",
-          onSelect: signInWithSpotify,
-        },
-        {
-          type: "action",
-          label: "Apple Music",
-          onSelect: signInWithApple,
-        },
-        {
-          type: "action",
-          label: "Cancel",
-          onSelect: () => {},
+          iconName: "user",
+          onClick: handleOpenSettings,
         },
       ],
     });
-  }, [showView, signInWithApple, signInWithSpotify]);
-
-  const handleSignOutClick = useCallback(() => {
-    showView({
-      type: "popup",
-      id: "signOutPopup",
-      title: "Sign out",
-      description: "Choose a service to sign out of",
-      listOptions: [
-        {
-          type: "action",
-          label: "Spotify",
-          onSelect: signOutSpotify,
-        },
-        {
-          type: "action",
-          label: "Apple Music",
-          onSelect: signOutApple,
-        },
-        {
-          type: "action",
-          label: "Cancel",
-          onSelect: () => {},
-        },
-      ],
-    });
-  }, [showView, signOutApple, signOutSpotify]);
-
-  const handleChangeColorScheme = useCallback(() => {
-    setColorScheme();
-  }, [setColorScheme]);
-
-  const handleAuthorizationChanged = useCallback(
-    (value: boolean) => {
-      setScreenViewOptions("library", {
-        headerRightActions: [
-          {
-            onClick: handleChangeColorScheme,
-            title: "Theme",
-          },
-          {
-            onClick: value ? handleSignOutClick : handleSignInClick,
-            title: value ? "Sign out" : "Sign in",
-          },
-        ],
-      });
-    },
-    [
-      handleChangeColorScheme,
-      handleSignInClick,
-      handleSignOutClick,
-      setScreenViewOptions,
-    ]
-  );
-
-  useSpotifySDK({
-    onAuthorizationChanged: handleAuthorizationChanged,
-  });
+  }, [handleOpenSettings, setScreenViewOptions]);
 
   const options: SelectableListOption[] = useMemo(
     () => [

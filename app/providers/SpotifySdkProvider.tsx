@@ -1,16 +1,20 @@
 import { views } from "components/views";
 import { getCookie, setCookie } from "cookies-next";
-import {
-  useViewContext,
-  useSettings,
-  useInterval,
-  useEffectOnce,
-  SpotifySDKContext,
-} from "hooks";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useViewContext, useSettings, useInterval, useEffectOnce } from "hooks";
+import { useState, useRef, useCallback, useEffect, createContext } from "react";
 import * as SpotifyUtils from "utils/spotify";
 import { SPOTIFY_TOKENS_COOKIE_NAME } from "utils/constants/api";
 
+export interface SpotifySDKState {
+  isPlayerConnected: boolean;
+  isSdkReady: boolean;
+  spotifyPlayer: Spotify.Player;
+  accessToken?: string;
+  refreshToken?: string;
+  deviceId?: string;
+}
+
+export const SpotifySDKContext = createContext<SpotifySDKState>({} as any);
 interface Props {
   children: React.ReactNode;
 }
@@ -20,7 +24,7 @@ export const SpotifySDKProvider = ({ children }: Props) => {
   const { setIsSpotifyAuthorized } = useSettings();
   const [deviceId, setDeviceId] = useState<string>();
   const spotifyPlayerRef = useRef<Spotify.Player | undefined>();
-  const [isPlayerConnected, setIsMounted] = useState(false);
+  const [isPlayerConnected, setIsPlayerConnected] = useState(false);
   const [isSdkReady, setIsSdkReady] = useState(false);
 
   const [storedAccessToken, storedRefreshToken, tokenLastRefreshedTimestamp] =
@@ -53,7 +57,7 @@ export const SpotifySDKProvider = ({ children }: Props) => {
 
   /** Fetch access tokens and, if successful, then set up the playback sdk. */
   const handleConnectToSpotify = useCallback(async () => {
-    setIsMounted(true);
+    setIsPlayerConnected(true);
 
     if (accessToken) {
       const player = new window.Spotify.Player({
@@ -122,7 +126,6 @@ export const SpotifySDKProvider = ({ children }: Props) => {
       );
     }
     setAccessToken(updatedAccessToken);
-    setIsSdkReady(true);
   }, [storedRefreshToken]);
 
   // Refresh the access token every 55 minutes.
@@ -138,9 +141,9 @@ export const SpotifySDKProvider = ({ children }: Props) => {
     const timestamp = Number(tokenLastRefreshedTimestamp);
     if (SpotifyUtils.checkShouldRefreshSpotifyTokens(timestamp)) {
       handleRefreshTokens();
-    } else {
-      setIsSdkReady(true);
     }
+
+    setIsSdkReady(true);
   }, [handleRefreshTokens, tokenLastRefreshedTimestamp]);
 
   useEffectOnce(() => {
@@ -158,6 +161,7 @@ export const SpotifySDKProvider = ({ children }: Props) => {
         accessToken,
         deviceId,
         isPlayerConnected,
+        isSdkReady,
       }}
     >
       {children}

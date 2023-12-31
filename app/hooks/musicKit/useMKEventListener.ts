@@ -5,7 +5,7 @@ import { useEffect } from "react";
  * This hook allows us to use it anywhere via a hook, similar to useEventListener.
  */
 const useMKEventListener = (
-  event: keyof typeof MusicKit.Events,
+  event: keyof MusicKit.Events,
   callback: (...args: any) => void
 ) => {
   useEffect(() => {

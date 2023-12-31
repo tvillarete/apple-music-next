@@ -34,6 +34,7 @@ const ContentTransitionContainer = styled.div<ContentTransitionContainerProps>`
   width: min(300px, 80vw);
   background-color: ${({ theme }) => theme.colors.background.tertiary};
   backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   border-radius: 14px;
   overflow: clip;
 `;

@@ -85,11 +85,11 @@ const RightContentContainer = styled.div`
   display: flex;
   align-items: center;
   padding-right: 16px;
+  justify-content: flex-end;
 `;
 
 const Label = styled.p`
   width: 100%;
-  font-style: normal;
   font-weight: 400;
   font-size: 17px;
   line-height: 22px;
@@ -102,6 +102,11 @@ const Label = styled.p`
 const SubLabel = styled(Label)<{ $variant: ListItemVariant }>`
   font-weight: normal;
   font-size: ${({ $variant }) => ($variant === "grid" ? "15px" : "14px")};
+  color: ${({ theme }) => theme.colors.content.secondary};
+`;
+
+const RightContentText = styled(Label)`
+  text-align: right;
   color: ${({ theme }) => theme.colors.content.secondary};
 `;
 
@@ -138,7 +143,8 @@ const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
   const theme = useTheme();
   const hasImage = !!option.image;
   const hasIconLeft = !!option.iconLeft && variant === "list";
-  const hasIconRight = variant === "list";
+  const hasIconRight = variant === "list" && option.type === "view";
+  const hasContentRight = hasIconRight || option.contentRight;
   const hasImageOrIconLeft = hasImage || hasIconLeft;
 
   return (
@@ -170,15 +176,22 @@ const SelectableListItem = ({ option, onClick, variant = "list" }: Props) => {
             <SubLabel $variant={variant}>{option.subLabel}</SubLabel>
           )}
         </LeftContentContainer>
-        {hasIconRight && (
+        {hasContentRight ? (
           <RightContentContainer>
-            <StyledArrowRight
-              size="xsmall"
-              color={theme.colors.content.tertiary}
-              name="arrowRight"
-            />
+            {typeof option.contentRight === "string" ? (
+              <RightContentText>{option.contentRight}</RightContentText>
+            ) : (
+              option.contentRight ?? null
+            )}
+            {hasIconRight ? (
+              <StyledArrowRight
+                size="xsmall"
+                color={theme.colors.content.tertiary}
+                name="arrowRight"
+              />
+            ) : null}
           </RightContentContainer>
-        )}
+        ) : null}
       </ContentContainer>
     </RootButtonContainer>
   );

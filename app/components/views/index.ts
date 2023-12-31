@@ -11,11 +11,13 @@ type ScreenId =
   | "albums"
   | "album"
   | "playlists"
-  | "playlist";
+  | "playlist"
+  | "settings";
 
 type PopupId =
   | "spotifyNotSupportedPopup"
   | "spotifyNonPremiumPopup"
+  | "chooseServicePopup"
   | "signinPopup"
   | "signOutPopup";
 
@@ -64,6 +66,11 @@ export const views: Record<ViewId, ViewOption> = {
     title: "Playlist",
     type: "screen",
   },
+  settings: {
+    id: "settings",
+    title: "Settings",
+    type: "screen",
+  },
   // music: { id: "music", title: "Music", type: WINDOW_TYPE.Screen },
   // settings: { id: "settings", title: "Settings", type: WINDOW_TYPE.Screen },
 
@@ -93,6 +100,11 @@ export const views: Record<ViewId, ViewOption> = {
   signinPopup: {
     id: "signinPopup",
     title: "Sign in",
+    type: "popup",
+  },
+  chooseServicePopup: {
+    id: "chooseServicePopup",
+    title: "Choose service",
     type: "popup",
   },
   signOutPopup: {

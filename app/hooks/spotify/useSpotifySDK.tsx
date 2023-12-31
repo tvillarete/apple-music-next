@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 
 import { useViewContext } from "hooks";
 import * as SpotifyUtils from "utils/spotify";
@@ -12,16 +6,10 @@ import * as SpotifyUtils from "utils/spotify";
 import { useSettings } from "..";
 import { views } from "components/views";
 import { API_URL } from "utils/constants/api";
-
-export interface SpotifySDKState {
-  isPlayerConnected: boolean;
-  spotifyPlayer: Spotify.Player;
-  accessToken?: string;
-  refreshToken?: string;
-  deviceId?: string;
-}
-
-export const SpotifySDKContext = createContext<SpotifySDKState>({} as any);
+import {
+  SpotifySDKContext,
+  SpotifySDKState,
+} from "providers/SpotifySdkProvider";
 
 export type SpotifySDKHook = SpotifySDKState & {
   signIn: () => void;

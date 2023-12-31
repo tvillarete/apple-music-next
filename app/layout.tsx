@@ -62,7 +62,6 @@ export default function RootLayout({
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
       <Script src="https://js-cdn.music.apple.com/musickit/v3/musickit.js" />
-      <Script src="https://sdk.scdn.co/spotify-player.js" />
     </html>
   );
 }

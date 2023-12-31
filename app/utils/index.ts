@@ -6,7 +6,8 @@ export const getArtwork = (size: number | string, url?: string) => {
     return undefined;
   }
 
-  return url.replace("{w}", `${size}`).replace("{h}", `${size}`);
+  const urlWithSize = url.replace("{w}", `${size}`).replace("{h}", `${size}`);
+  return urlWithSize;
 };
 
 export const setDocumentSongTitle = (song?: AppleMusicApi.Song) => {

@@ -90,3 +90,12 @@ export type ThemeConstants = {
 export const getThemeConstants = (mode: ColorScheme): ThemeConstants => ({
   colors: colorThemes[mode],
 });
+
+export const getColorSchemeDisplayName = (mode: ColorScheme) => {
+  switch (mode) {
+    case "default":
+      return "Light";
+    case "dark":
+      return "Dark";
+  }
+};

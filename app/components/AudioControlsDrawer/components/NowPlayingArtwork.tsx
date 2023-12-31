@@ -31,6 +31,7 @@ const RootContainer = styled(motion.div)<{
   position: relative;
   ${({ $size }) => getArtworkPxFromSize($size)};
   border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
+  justify-self: center;
 `;
 
 const ArtworkImage = styled(motion.img)<{
@@ -56,7 +57,7 @@ const NowPlayingArtwork = ({ size = "large" }: NowPlayingArtworkProps) => {
   const controls = useAnimationControls();
 
   const artwork =
-    Utils.getArtwork(400, nowPlayingItem?.artwork?.url) ??
+    Utils.getArtwork(600, nowPlayingItem?.artwork?.url) ??
     "/music/default_album_artwork.png";
 
   useEffect(() => {

@@ -88,7 +88,7 @@ const useMKDataFetcher = () => {
       return {
         data:
           response?.data.map((item: AppleMusicApi.Album) =>
-            ConversionUtils.convertAppleAlbum(item, 300)
+            ConversionUtils.convertAppleAlbum(item)
           ) ?? [],
         nextPageParam,
       };

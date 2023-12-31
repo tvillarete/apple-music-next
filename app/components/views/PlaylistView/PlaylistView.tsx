@@ -25,7 +25,7 @@ const PlaylistView = ({ id, inLibrary = false }: Props) => {
         label: song.name,
         subLabel: song.artistName ?? "Unknown artist",
         image: {
-          url: song.artwork?.url,
+          url: Utils.getArtwork(200, song.artwork?.url) ?? "",
           size: 64,
           styles: {
             borderRadius: 4,
