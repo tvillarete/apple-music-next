@@ -40,7 +40,6 @@ const RootContainer = styled(motion.div)<{
       grid-template-rows: unset;
       height: ${MINI_PLAYER_HEIGHT};
       margin: 12px 16px;
-      padding: 0 8px;
     `}
 `;
 

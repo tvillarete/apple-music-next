@@ -9,6 +9,7 @@ import { PlaylistView } from "components/views/PlaylistView";
 import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
+import { SigninPrompt } from "components/SigninPrompt/SigninPrompt";
 
 interface Props {
   playlists?: MediaApi.Playlist[];
@@ -60,7 +61,7 @@ const PlaylistsView = ({ playlists, inLibrary = true }: Props) => {
       emptyMessage="No saved playlists"
     />
   ) : (
-    <p>Sign in to see playlists</p>
+    <SigninPrompt />
   );
 };
 

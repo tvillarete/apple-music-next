@@ -1,6 +1,6 @@
 import Icon, { IconName } from "components/Icon/Icon";
 import { MouseEventHandler } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const RootContainer = styled.button`
   appearance: none;
@@ -28,9 +28,13 @@ const ScreenViewHeaderAction = ({
   title,
   ...props
 }: ScreenViewHeaderActionProps) => {
+  const theme = useTheme();
+
   return (
     <RootContainer onClick={onClick} {...props}>
-      {iconName ? <Icon size="medium" name={iconName} color="#D34C4B" /> : null}
+      {iconName ? (
+        <Icon size="large" name={iconName} color={theme.colors.red} />
+      ) : null}
       {title ? <Text>{title}</Text> : null}
     </RootContainer>
   );

@@ -60,7 +60,6 @@ const TrackControls = ({
       onClick={(event) => {
         event?.stopPropagation();
       }}
-      layout
       {...fade}
     >
       {isSkipPrevButtonVisible ? (

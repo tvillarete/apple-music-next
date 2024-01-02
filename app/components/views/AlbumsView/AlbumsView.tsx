@@ -8,6 +8,7 @@ import SelectableList, {
   SelectableListOption,
 } from "components/SelectableList";
 import { AlbumView } from "components/views/AlbumView";
+import { SigninPrompt } from "components/SigninPrompt/SigninPrompt";
 
 interface Props {
   albums?: MediaApi.Album[];
@@ -49,8 +50,7 @@ const AlbumsView = ({ albums, inLibrary = true }: Props) => {
       variant="grid"
     />
   ) : (
-    // TODO: Add AuthPrompt component
-    <p>Sign in to view albums</p>
+    <SigninPrompt />
   );
 };
 

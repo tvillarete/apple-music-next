@@ -32,6 +32,7 @@ const RootContainer = styled(motion.div)<{
   ${({ $size }) => getArtworkPxFromSize($size)};
   border-radius: ${({ $size }) => ($size === "large" ? "10px" : "6px")};
   justify-self: center;
+  align-self: center;
 `;
 
 const ArtworkImage = styled(motion.img)<{

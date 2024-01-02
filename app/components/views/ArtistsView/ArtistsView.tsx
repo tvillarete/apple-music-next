@@ -10,6 +10,7 @@ import { ArtistView } from "components/views/ArtistView";
 import styled from "styled-components";
 import { useFetchArtists } from "hooks/utils/useDataFetcher";
 import { views } from "components/views";
+import { SigninPrompt } from "components/SigninPrompt/SigninPrompt";
 
 const RootContainer = styled.div``;
 
@@ -64,8 +65,7 @@ const ArtistsView = ({
           emptyMessage="No saved artists"
         />
       ) : (
-        <p>AuthPrompt</p>
-        // <AuthPrompt message="Sign in to view your artists" />
+        <SigninPrompt />
       )}
     </RootContainer>
   );

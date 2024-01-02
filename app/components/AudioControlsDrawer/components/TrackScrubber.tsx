@@ -1,70 +1,81 @@
+import { Slider } from "components/Slider/Slider";
+import { format, set } from "date-fns";
+import { useMotionValue } from "framer-motion";
 import { useAudioPlayer, useEffectOnce, useInterval } from "hooks";
-import { memo, useEffect, useState } from "react";
-import styled from "styled-components";
-
-const RootContainer = styled.div``;
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 const getTrackPercent = (currentTime: number, duration: number) => {
-  return Math.floor((currentTime / duration) * 100);
+  return Math.round((currentTime / duration) * 100) || 0;
 };
 
 const TrackScrubber = () => {
-  const { playbackInfo, updatePlaybackInfo } = useAudioPlayer();
+  const { playbackInfo, updatePlaybackInfo, seekToTime, nowPlayingItem } =
+    useAudioPlayer();
   const { isPlaying, isPaused, currentTime, duration } = playbackInfo;
-  const [, setPercent] = useState(getTrackPercent(currentTime, duration));
-  // const hasNowPlayingItem = !!nowPlayingItem;
 
-  // const handleProgressChange = useCallback(
-  //   (updatedPercent: number) => {
-  //     const newTime = (updatedPercent * duration) / 100;
+  const hasNowPlayingItem = !!nowPlayingItem;
 
-  //     seekToTime(newTime);
-  //     setPercent(updatedPercent);
-  //   },
-  //   [duration, seekToTime]
-  // );
+  const progress = useMotionValue(50);
 
-  const shouldSkipInterval = !isPlaying || isPaused;
+  const percent = useMemo(
+    () => getTrackPercent(currentTime, duration),
+    [currentTime, duration]
+  );
+
+  const handleProgressChange = useCallback(
+    (updatedPercent: number) => {
+      const newTime = updatedPercent * duration;
+
+      if (hasNowPlayingItem) {
+        seekToTime(newTime);
+      }
+    },
+    [duration, hasNowPlayingItem, seekToTime]
+  );
 
   useEffect(() => {
-    setPercent(getTrackPercent(currentTime, duration));
-  }, [currentTime, duration]);
+    progress.set(percent / 100);
+  }, [percent, progress]);
 
   // Make sure the playback info is updated when the component mounts.
   useEffectOnce(() => {
     updatePlaybackInfo();
   });
 
+  const shouldSkipInterval = !isPlaying || isPaused;
+
   /** Update the progress bar every second. */
   useInterval(updatePlaybackInfo, 1000, shouldSkipInterval);
 
-  // const leftLabel = useMemo(
-  //   () =>
-  //     hasNowPlayingItem
-  //       ? format(
-  //           set(new Date(), { hours: 0, minutes: 0, seconds: currentTime }),
-  //           "mm:ss"
-  //         )
-  //       : "--:--",
-  //   [currentTime, hasNowPlayingItem]
-  // );
+  const currentTimeLabel = useMemo(
+    () =>
+      hasNowPlayingItem
+        ? format(
+            set(new Date(), { hours: 0, minutes: 0, seconds: currentTime }),
+            "mm:ss"
+          )
+        : "--:--",
+    [currentTime, hasNowPlayingItem]
+  );
 
-  // const rightLabel = useMemo(
-  //   () =>
-  //     hasNowPlayingItem
-  //       ? format(
-  //           set(new Date(), { hours: 0, minutes: 0, seconds: duration }),
-  //           "mm:ss"
-  //         )
-  //       : "--:--",
-  //   [duration, hasNowPlayingItem]
-  // );
+  const durationLabel = useMemo(
+    () =>
+      hasNowPlayingItem
+        ? format(
+            set(new Date(), { hours: 0, minutes: 0, seconds: duration }),
+            "mm:ss"
+          )
+        : "--:--",
+    [duration, hasNowPlayingItem]
+  );
 
   return (
-    <RootContainer>
-      {/* TODO: Replace this with Next UI Scrubber */}
-      <div>Scrubber</div>
-    </RootContainer>
+    <Slider
+      progress={progress}
+      onChange={handleProgressChange}
+      leadingBottomContent={currentTimeLabel}
+      trailingBottomContent={durationLabel}
+    />
   );
 };
 
